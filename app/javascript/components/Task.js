@@ -14,6 +14,11 @@ import {
 class Task extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      description: props.task.description,
+      isDone: props.task.isDone,
+      isEdit: false
+    };
     this.toggleIsDone = this.toggleIsDone.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
@@ -21,11 +26,6 @@ class Task extends React.Component {
     this.getTaskListItem = this.getTaskListItem.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.onEditSubmit = this.onEditSubmit.bind(this);
-    this.state = {
-      description: props.task.description,
-      isDone: props.task.isDone,
-      isEdit: false
-    };
   }
 
   handleDelete() {
@@ -38,21 +38,17 @@ class Task extends React.Component {
   }
 
   toggleIsDone() {
-    this.setState({ isDone: !this.state.isDone });
+    var isDone = this.state.isDone;
+    this.setState({ isDone: !isDone });
     if (!this.state.isEdit) {
-      this.onEditSubmit();
+      this.onEditSubmit(!isDone, this.state.description);
     }
   }
 
   onEditSubmit(isDone, description) {
     var params = new URLSearchParams();
-    if (isDone == undefined && description == undefined) {
-      params.set("task[description]", this.state.description);
-      params.set("task[isDone]", this.state.isDone);
-    } else {
-      params.set("task[description]", description);
-      params.set("task[isDone]", isDone);
-    }
+    params.set("task[description]", description);
+    params.set("task[isDone]", isDone);
     var id = this.props.task.id;
     fetch("/tasks/" + id, {
       method: "put",
@@ -97,7 +93,7 @@ class Task extends React.Component {
     );
   }
 
-  getTaskListItem(task) {
+  getTaskListItem() {
     return (
       <ListItem alignItems="flex-start">
         <ListItemIcon>
