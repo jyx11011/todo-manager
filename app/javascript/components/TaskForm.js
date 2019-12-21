@@ -46,7 +46,7 @@ class TaskForm extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    if (!this.state.description) {
+    if (!this.state.description.trim()) {
       this.setState({
         error: true,
         helperText: "task cannot be empty"
@@ -75,12 +75,10 @@ class TaskForm extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <ListItemIcon>
           <DoneCheckCircle
             checked={this.state.isDone}
             toggle={this.toggleIsDone}
           />
-        </ListItemIcon>
 
         <Container style={{ padding: 0 }}>
           <form action="/tasks" method="post" onSubmit={this.handleSubmit}>

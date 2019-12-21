@@ -8,7 +8,8 @@ import EditIcon from "@material-ui/icons/Edit";
 import {
   ListItemText,
   ListItemIcon,
-  ListItemSecondaryAction
+  ListItemSecondaryAction,
+  Typography
 } from "@material-ui/core";
 
 class Task extends React.Component {
@@ -95,20 +96,21 @@ class Task extends React.Component {
 
   getTaskListItem() {
     return (
-      <ListItem alignItems="flex-start">
-        <ListItemIcon>
+      <ListItem>
           <DoneCheckCircle
             checked={this.state.isDone}
             toggle={this.toggleIsDone}
           />
-        </ListItemIcon>
-        <ListItemText primary={this.state.description}></ListItemText>
+        <ListItemText
+          style={{ whiteSpace: "normal" }}
+          primary={<Typography noWrap>{this.state.description}</Typography>}
+        ></ListItemText>
         <ListItemSecondaryAction>
-          <IconButton onClick={this.handleEdit}>
-            <EditIcon />
+          <IconButton onClick={this.handleEdit} size="small">
+            <EditIcon fontSize="small" />
           </IconButton>
-          <IconButton onClick={this.handleDelete}>
-            <DeleteIcon />
+          <IconButton onClick={this.handleDelete} size="small">
+            <DeleteIcon fontSize="small" />
           </IconButton>
         </ListItemSecondaryAction>
       </ListItem>
