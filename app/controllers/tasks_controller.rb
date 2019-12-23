@@ -6,7 +6,6 @@ class TasksController < ApplicationController
 
   def create
     @task = Task.new(task_params)
-
     if @task.save
       render json: @task
     else
@@ -35,6 +34,6 @@ class TasksController < ApplicationController
 
   private
     def task_params
-      params.require(:task).permit(:description, :isDone)
+      params.require(:task).permit(:description, :isDone, tag_ids:[])
     end
 end

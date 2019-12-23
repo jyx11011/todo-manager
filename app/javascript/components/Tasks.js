@@ -2,6 +2,8 @@ import React from "react";
 import Task from "./Task";
 import NewTaskButton from "./NewTaskButton";
 import TaskForm from "./TaskForm";
+import NewTagButton from "./NewTagButton";
+import TagForm from "./TagForm";
 import List from "@material-ui/core/List";
 import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
@@ -15,6 +17,7 @@ class Tasks extends React.Component {
     this.handleCancel = this.handleCancel.bind(this);
     this.getNewTaskButton = this.getNewTaskButton.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.handleNewTask=this.handleNewTask.bind(this);
     this.state = {
       tasks: props.data,
       newTaskArea: null,
@@ -33,7 +36,7 @@ class Tasks extends React.Component {
     this.setState({
       newTaskArea: (
         <ListItem alignItems="flex-start">
-          <TaskForm task={null} cancel={this.handleCancel} />
+          <TaskForm task={null} cancel={this.handleCancel} handleNewTask={this.handleNewTask}/>
         </ListItem>
       ),
       newTaskButton: null
@@ -50,6 +53,16 @@ class Tasks extends React.Component {
     }
     this.setState({
       tasks: newTasks
+    });
+  }
+
+  handleNewTask(task) {
+    var newTasks = this.state.tasks.slice();
+    newTasks=newTasks.concat([task]);
+    this.setState({
+      tasks: newTasks,
+      newTaskArea: null,
+      newTaskButton: this.getNewTaskButton()
     });
   }
 
@@ -80,13 +93,14 @@ class Tasks extends React.Component {
 
   render() {
     return (
-      <Container>
+      <React.Fragment>
         <List style={{ maxWidth: "100%" }}>
           {this.renderTaskListItems()}
           {this.state.newTaskArea}
         </List>
         {this.state.newTaskButton}
-      </Container>
+        <TagForm />
+      </React.Fragment>
     );
   }
 }
