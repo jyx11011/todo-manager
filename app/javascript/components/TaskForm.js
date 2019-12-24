@@ -5,6 +5,7 @@ import Grid from "@material-ui/core/Grid";
 import { Container, TextField } from "@material-ui/core";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import AddTagForm from "./AddTagForm";
+import Box from "@material-ui/core/Box";
 
 class TaskForm extends React.Component {
   constructor(props) {
@@ -15,7 +16,7 @@ class TaskForm extends React.Component {
         description: "",
         isEdit: false,
         error: false,
-        helperText: " ",
+        helperText: null,
         tags:[]
       };
     } else {
@@ -24,7 +25,7 @@ class TaskForm extends React.Component {
         description: props.description,
         isEdit: true,
         error: false,
-        helperText: " ",
+        helperText: null,
         tags:[]
       };
     }
@@ -44,7 +45,7 @@ class TaskForm extends React.Component {
     this.setState({
       [e.target.name]: e.target.value,
       error:false,
-      helperText:" "
+      helperText:null
     });
   }
 
@@ -82,12 +83,13 @@ class TaskForm extends React.Component {
   render() {
     return (
       <React.Fragment>
+        <Box>
           <DoneCheckCircle
             checked={this.state.isDone}
             toggle={this.toggleIsDone}
           />
-
-        <Container style={{ padding: 0 }}>
+        </Box>
+        <Box width='100%'>
           <form action="/tasks" method="post" onSubmit={this.handleSubmit}>
             <Grid container>
               <Grid item xs={12}>
@@ -99,7 +101,7 @@ class TaskForm extends React.Component {
                   fullWidth
                   autoFocus
                   error={this.state.error}
-                  helperText={this.state.helperText}
+                  placeholder={this.state.helperText}
                   variant="outlined"
                   margin="dense"
                 ></TextField>
@@ -123,7 +125,7 @@ class TaskForm extends React.Component {
               </Grid>
             </Grid>
           </form>
-        </Container>
+        </Box>
       </React.Fragment>
     );
   }

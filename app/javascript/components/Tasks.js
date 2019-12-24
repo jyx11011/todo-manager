@@ -2,22 +2,19 @@ import React from "react";
 import Task from "./Task";
 import NewTaskButton from "./NewTaskButton";
 import TaskForm from "./TaskForm";
-import NewTagButton from "./NewTagButton";
 import TagForm from "./TagForm";
-import List from "@material-ui/core/List";
 import Divider from "@material-ui/core/Divider";
-import ListItem from "@material-ui/core/ListItem";
-import { Container } from "@material-ui/core";
+import Box from "@material-ui/core/Box";
 
 class Tasks extends React.Component {
   constructor(props) {
     super(props);
     this.handleClick = this.handleClick.bind(this);
-    this.renderTaskListItems = this.renderTaskListItems.bind(this);
+    this.renderTasks = this.renderTasks.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.getNewTaskButton = this.getNewTaskButton.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
-    this.handleNewTask=this.handleNewTask.bind(this);
+    this.handleNewTask = this.handleNewTask.bind(this);
     this.state = {
       tasks: props.data,
       newTaskArea: null,
@@ -35,9 +32,13 @@ class Tasks extends React.Component {
   handleClick() {
     this.setState({
       newTaskArea: (
-        <ListItem alignItems="flex-start">
-          <TaskForm task={null} cancel={this.handleCancel} handleNewTask={this.handleNewTask}/>
-        </ListItem>
+        <Box display="flex">
+          <TaskForm
+            task={null}
+            cancel={this.handleCancel}
+            handleNewTask={this.handleNewTask}
+          />
+        </Box>
       ),
       newTaskButton: null
     });
@@ -58,7 +59,7 @@ class Tasks extends React.Component {
 
   handleNewTask(task) {
     var newTasks = this.state.tasks.slice();
-    newTasks=newTasks.concat([task]);
+    newTasks = newTasks.concat([task]);
     this.setState({
       tasks: newTasks,
       newTaskArea: null,
@@ -70,37 +71,34 @@ class Tasks extends React.Component {
     return <NewTaskButton onClick={this.handleClick} />;
   }
 
-  renderTaskListItems() {
-    var listItems = [];
+  renderTasks() {
+    var items = [];
     for (var i = 0; i < this.state.tasks.length; i++) {
-      listItems.push(
+      items.push(
         <Task
           task={this.state.tasks[i]}
           handleDelete={this.handleDelete}
           key={this.state.tasks[i].id}
         />
       );
-      listItems.push(
+      items.push(
         <Divider
           variant="middle"
           key={"div" + this.state.tasks[i].id}
-          component="li"
         ></Divider>
       );
     }
-    return listItems;
+    return items;
   }
 
   render() {
     return (
-      <React.Fragment>
-        <List style={{ maxWidth: "100%" }}>
-          {this.renderTaskListItems()}
-          {this.state.newTaskArea}
-        </List>
+      <Box>
+        {this.renderTasks()}
         {this.state.newTaskButton}
+        {this.state.newTaskArea}
         <TagForm />
-      </React.Fragment>
+      </Box>
     );
   }
 }

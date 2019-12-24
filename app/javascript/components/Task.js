@@ -1,16 +1,11 @@
 import React from "react";
 import DoneCheckCircle from "./DoneCheckCircle";
 import TaskForm from "./TaskForm";
-import ListItem from "@material-ui/core/ListItem";
-import IconButton from "@material-ui/core/IconButton";
-import DeleteIcon from "@material-ui/icons/Delete";
-import EditIcon from "@material-ui/icons/Edit";
+import TaskButtons from "./TaskButtons";
+import Box from "@material-ui/core/Box";
+
 import {
-  ListItemText,
-  ListItemIcon,
-  ListItemSecondaryAction,
-  Typography
-} from "@material-ui/core";
+  Typography} from "@material-ui/core";
 
 class Task extends React.Component {
   constructor(props) {
@@ -83,37 +78,36 @@ class Task extends React.Component {
 
   getEditFormListItem() {
     return (
-      <ListItem alignItems="flex-start">
+      <Box display="flex">
         <TaskForm
           description={this.state.description}
           isDone={this.state.isDone}
           cancel={this.handleCancel}
           onSubmit={this.onEditSubmit}
         ></TaskForm>
-      </ListItem>
+      </Box>
     );
   }
 
   getTaskListItem() {
     return (
-      <ListItem>
+      <Box display="flex">
+        <Box>
           <DoneCheckCircle
             checked={this.state.isDone}
             toggle={this.toggleIsDone}
           />
-        <ListItemText
-          style={{ whiteSpace: "normal" }}
-          primary={<Typography noWrap>{this.state.description}</Typography>}
-        ></ListItemText>
-        <ListItemSecondaryAction>
-          <IconButton onClick={this.handleEdit} size="small">
-            <EditIcon fontSize="small" />
-          </IconButton>
-          <IconButton onClick={this.handleDelete} size="small">
-            <DeleteIcon fontSize="small" />
-          </IconButton>
-        </ListItemSecondaryAction>
-      </ListItem>
+        </Box>
+        <Box width='100%' paddingTop="10px">
+          <Typography>{this.state.description}</Typography>
+        </Box>
+        <Box>
+          <TaskButtons
+            handleDelete={this.handleDelete}
+            handleEdit={this.handleEdit}
+          />
+        </Box>
+      </Box>
     );
   }
   render() {
