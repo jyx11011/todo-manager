@@ -1,5 +1,6 @@
 import React from "react";
 import DoneCheckCircle from "./DoneCheckCircle";
+import getTaskParams from "./util";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import { Container, TextField } from "@material-ui/core";
@@ -17,7 +18,8 @@ class TaskForm extends React.Component {
         isEdit: false,
         error: false,
         helperText: null,
-        tags:[]
+        tags: [],
+        allTags: props.allTags
       };
     } else {
       this.state = {
@@ -26,7 +28,8 @@ class TaskForm extends React.Component {
         isEdit: true,
         error: false,
         helperText: null,
-        tags:[]
+        tags: props.tags,
+        allTags: props.allTags
       };
     }
     this.handleChange = this.handleChange.bind(this);
@@ -44,15 +47,15 @@ class TaskForm extends React.Component {
   handleChange(e) {
     this.setState({
       [e.target.name]: e.target.value,
-      error:false,
-      helperText:null
+      error: false,
+      helperText: null
     });
   }
 
   handleTagChange(tags) {
     this.setState({
       tags: tags
-    })
+    });
   }
 
   handleSubmit(e) {
@@ -65,19 +68,27 @@ class TaskForm extends React.Component {
       return;
     }
     if (this.state.isEdit) {
-      this.props.onSubmit(this.state.isDone, this.state.description);
+      this.props.onSubmit({
+        isDone: this.state.isDone,
+        description: this.state.description,
+        tags: this.state.tags
+      });
       return;
     }
-    var tagParam=this.state.tags.map(id=>"task[tag_ids][]="+id).join('&');
-    var params="task[description]="+this.state.description+"&task[isDone]="+this.state.isDone+
-    "&"+tagParam;
-    fetch("/tasks?"+params, {
-      method: "post"
-    }).then(response =>{
-      return response.json();
-    }).then(task => {
-      this.props.handleNewTask(task);
+    var params = getTaskParams({
+      isDone: this.state.isDone,
+      description: this.state.description,
+      tags: this.state.tags
     });
+    fetch("/tasks" + params, {
+      method: "post"
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(task => {
+        this.props.handleNewTask(task);
+      });
   }
 
   render() {
@@ -89,7 +100,7 @@ class TaskForm extends React.Component {
             toggle={this.toggleIsDone}
           />
         </Box>
-        <Box width='100%'>
+        <Box width="100%">
           <form action="/tasks" method="post" onSubmit={this.handleSubmit}>
             <Grid container>
               <Grid item xs={12}>
@@ -106,7 +117,13 @@ class TaskForm extends React.Component {
                   margin="dense"
                 ></TextField>
               </Grid>
-              <AddTagForm onChange={this.handleTagChange}/>
+              <Grid item xs={12}>
+                <AddTagForm
+                  tags={this.state.tags}
+                  allTags={this.state.allTags}
+                  onChange={this.handleTagChange}
+                />
+              </Grid>
               <Grid container direction="row" justify="flex-end" spacing={1}>
                 <Grid item>
                   <Button type="submit" size="small" variant="contained">

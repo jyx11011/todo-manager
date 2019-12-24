@@ -2,7 +2,7 @@ import React from "react"
 import Checkbox from "@material-ui/core/Checkbox";
 import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline"
-import PropTypes from "prop-types"
+
 class DoneCheckCircle extends React.Component {
   render () {
     return (

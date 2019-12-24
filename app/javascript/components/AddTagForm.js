@@ -1,44 +1,39 @@
 import React from "react";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import MenuItem from '@material-ui/core/MenuItem';
+import MenuItem from "@material-ui/core/MenuItem";
 import PropTypes from "prop-types";
-import { Input } from "@material-ui/core";
+import { Input, InputBase, Typography } from "@material-ui/core";
+import Box from "@material-ui/core/Box"
+import Tag from "./Tag";
 class AddTagForm extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      tags: [],
-      allTags: null
+      tags: props.allTags.filter(tag => props.tags.some(t => t.id == tag.id)),
+      allTags: props.allTags
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
   }
 
   handleChange(e) {
     var options = e.target.value;
     this.setState({
       tags: options
-    })
+    });
     this.props.onChange(options);
   }
 
-  componentDidMount() {
-    fetch("./tags", {
-      method: "get"
-    })
-      .then(response => response.json())
-      .then(tags => {
-        this.setState({
-          allTags: tags.map((tag, index) => {
-            return (
-              <MenuItem value={tag.id} key={tag.id}>
-                {tag.name}
-              </MenuItem>
-            );
-          })
-        });
-      });
+  handleDelete(tag) {
+    var options = this.state.tags.slice();
+    options.splice(options.indexOf(tag), 1);
+    this.setState({
+      tags: options
+    });
+    this.props.onChange(options);
   }
 
   handleSubmit(e) {
@@ -46,18 +41,38 @@ class AddTagForm extends React.Component {
   }
   render() {
     return (
-      <React.Fragment>
+      <Box>
         <FormControl>
           <Select
             multiple
+            displayEmpty
             value={this.state.tags}
             onChange={this.handleChange}
-            input={<Input/>}
+            input={<InputBase multiline />}
+            renderValue={selected => {
+              if (selected.length == 0) {
+                return <Typography style={{fontSize: '0.8em'}}>Click to select tags</Typography>;
+              } else {
+                return (
+                  <div>
+                    {selected.map(value => (
+                      <Tag key={value.id} tag={value} deletable={0} />
+                    ))}
+                  </div>
+                );
+              }
+            }}
           >
-            {this.state.allTags}
+            {this.state.allTags.map((tag, index) => {
+              return (
+                <MenuItem value={tag} key={tag.id}>
+                  {tag.name}
+                </MenuItem>
+              );
+            })}
           </Select>
         </FormControl>
-      </React.Fragment>
+      </Box>
     );
   }
 }

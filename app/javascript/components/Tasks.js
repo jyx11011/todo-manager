@@ -18,7 +18,8 @@ class Tasks extends React.Component {
     this.state = {
       tasks: props.data,
       newTaskArea: null,
-      newTaskButton: <NewTaskButton onClick={this.handleClick} />
+      newTaskButton: <NewTaskButton onClick={this.handleClick} />,
+      allTags:props.allTags
     };
   }
 
@@ -37,6 +38,7 @@ class Tasks extends React.Component {
             task={null}
             cancel={this.handleCancel}
             handleNewTask={this.handleNewTask}
+            allTags={this.state.allTags}
           />
         </Box>
       ),
@@ -79,6 +81,7 @@ class Tasks extends React.Component {
           task={this.state.tasks[i]}
           handleDelete={this.handleDelete}
           key={this.state.tasks[i].id}
+          allTags={this.state.allTags}
         />
       );
       items.push(
