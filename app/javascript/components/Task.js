@@ -1,13 +1,12 @@
 import React from "react";
-import getTaskParams from "./util"
+import getTaskParams from "./util";
 import DoneCheckCircle from "./DoneCheckCircle";
 import TaskForm from "./TaskForm";
 import TaskButtons from "./TaskButtons";
-import Tag from "./Tag"
+import Tag from "./Tag";
 import Box from "@material-ui/core/Box";
 
-import {
-  Typography} from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 
 class Task extends React.Component {
   constructor(props) {
@@ -16,7 +15,7 @@ class Task extends React.Component {
       description: props.task.description,
       isDone: props.task.isDone,
       tags: props.task.tags,
-      isEdit: false,
+      isEdit: false
     };
     this.toggleIsDone = this.toggleIsDone.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
@@ -42,30 +41,33 @@ class Task extends React.Component {
     var isDone = this.state.isDone;
     this.setState({ isDone: !isDone });
     if (!this.state.isEdit) {
-      this.onEditSubmit({isDone: !isDone});
+      this.onEditSubmit({ isDone: !isDone });
     }
   }
 
   handleDeleteTag(tag) {
     var newTags = this.state.tags.slice();
-    newTags.splice(newTags.indexOf(tag),1);
+    newTags.splice(newTags.indexOf(tag), 1);
     this.setState({
       tags: newTags
-    })
-    this.onEditSubmit({tags: newTags})
+    });
+    this.onEditSubmit({ tags: newTags });
   }
 
   onEditSubmit(task) {
     var id = this.props.task.id;
     fetch("/tasks/" + id + getTaskParams(task), {
-      method: "put",
-    }).then(_response => {
-      if (this.state.isEdit) {
-        var newState = task;
-        newState['isEdit']=false;
-        this.setState(newState);
-      }
-    });
+      method: "put"
+    })
+      .then(response => response.json())
+      .then(newTask => {
+        if (this.state.isEdit) {
+          var newState = task;
+          newState["isEdit"] = false;
+          this.setState(newState);
+        }
+        this.props.handleEdit(newTask);
+      });
   }
 
   handleEdit() {
@@ -96,9 +98,16 @@ class Task extends React.Component {
   }
 
   renderTags() {
-    return this.state.tags.map((tag, index)=>{
-      return <Tag key={tag.id} tag={tag} handleDelete={this.handleDeleteTag} deletable={2}/>
-    })
+    return this.state.tags.map((tag, index) => {
+      return (
+        <Tag
+          key={tag.id}
+          tag={tag}
+          handleDelete={this.handleDeleteTag}
+          deletable={2}
+        />
+      );
+    });
   }
 
   getTask() {
@@ -110,8 +119,11 @@ class Task extends React.Component {
             toggle={this.toggleIsDone}
           />
         </Box>
-        <Box width='100%' paddingTop="10px" marginBottom="5px">
-          <Typography>{this.state.description}{this.renderTags()}</Typography>
+        <Box width="100%" paddingTop="10px" marginBottom="5px">
+          <Typography>
+            {this.state.description}
+            {this.renderTags()}
+          </Typography>
         </Box>
         <Box>
           <TaskButtons
@@ -123,9 +135,7 @@ class Task extends React.Component {
     );
   }
   render() {
-    return this.state.isEdit
-      ? this.getEditForm()
-      : this.getTask();
+    return this.state.isEdit ? this.getEditForm() : this.getTask();
   }
 }
 

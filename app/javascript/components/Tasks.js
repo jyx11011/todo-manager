@@ -15,12 +15,10 @@ class Tasks extends React.Component {
     this.getNewTaskButton = this.getNewTaskButton.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleNewTask = this.handleNewTask.bind(this);
-    this.handleNewTag = this.handleNewTag.bind(this);
+    this.handleEditTask = this.handleEditTask.bind(this);
     this.renderNewTaskArea = this.renderNewTaskArea.bind(this);
     this.state = {
-      tasks: props.data,
-      isEditingNewTask: false,
-      allTags: props.allTags
+      isEditingNewTask: false
     };
   }
 
@@ -37,33 +35,18 @@ class Tasks extends React.Component {
   }
 
   handleDelete(id) {
-    var newTasks = this.state.tasks.slice();
-    for (var i = 0; i < newTasks.length; i++) {
-      if (newTasks[i].id == id) {
-        newTasks.splice(i, 1);
-        break;
-      }
-    }
-    this.setState({
-      tasks: newTasks
-    });
+    this.props.handleDeleteTask(id);
   }
 
   handleNewTask(task) {
-    var newTasks = this.state.tasks.slice();
-    newTasks = newTasks.concat([task]);
+    this.props.handleNewTask(task);
     this.setState({
-      tasks: newTasks,
       isEditingNewTask: false
     });
   }
 
-  handleNewTag(tag) {
-    var newAllTags = this.state.allTags.slice();
-    newAllTags = newAllTags.concat([tag]);
-    this.setState({
-      allTags: newAllTags
-    });
+  handleEditTask(task) {
+    this.props.handleEditTask(task);
   }
 
   getNewTaskButton() {
@@ -72,19 +55,20 @@ class Tasks extends React.Component {
 
   renderTasks() {
     var items = [];
-    for (var i = 0; i < this.state.tasks.length; i++) {
+    for (var i = 0; i < this.props.tasks.length; i++) {
       items.push(
         <Task
-          task={this.state.tasks[i]}
+          task={this.props.tasks[i]}
           handleDelete={this.handleDelete}
-          key={this.state.tasks[i].id}
-          allTags={this.state.allTags}
+          handleEdit={this.handleEditTask}
+          key={this.props.tasks[i].id}
+          allTags={this.props.allTags}
         />
       );
       items.push(
         <Divider
           variant="middle"
-          key={"div" + this.state.tasks[i].id}
+          key={"div" + this.props.tasks[i].id}
         ></Divider>
       );
     }
@@ -99,7 +83,7 @@ class Tasks extends React.Component {
             task={null}
             cancel={this.handleCancel}
             handleNewTask={this.handleNewTask}
-            allTags={this.state.allTags}
+            allTags={this.props.allTags}
           />
         </Box>
       );
