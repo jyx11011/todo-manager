@@ -17,7 +17,6 @@ class Task extends React.Component {
       isDone: props.task.isDone,
       tags: props.task.tags,
       isEdit: false,
-      allTags: props.allTags
     };
     this.toggleIsDone = this.toggleIsDone.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
@@ -90,7 +89,7 @@ class Task extends React.Component {
           tags={this.state.tags}
           cancel={this.handleCancel}
           onSubmit={this.onEditSubmit}
-          allTags={this.state.allTags}
+          allTags={this.props.allTags}
         ></TaskForm>
       </Box>
     );

@@ -2,8 +2,7 @@ import React from "react";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-import PropTypes from "prop-types";
-import { Input, InputBase, Typography } from "@material-ui/core";
+import { Input, Typography, Paper } from "@material-ui/core";
 import Box from "@material-ui/core/Box"
 import Tag from "./Tag";
 class AddTagForm extends React.Component {
@@ -12,7 +11,6 @@ class AddTagForm extends React.Component {
 
     this.state = {
       tags: props.allTags.filter(tag => props.tags.some(t => t.id == tag.id)),
-      allTags: props.allTags
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -48,13 +46,14 @@ class AddTagForm extends React.Component {
             displayEmpty
             value={this.state.tags}
             onChange={this.handleChange}
-            input={<InputBase multiline />}
+            input={<Input/>}
+            MenuProps={{PaperProps:{style:{maxHeight: 240}}}}
             renderValue={selected => {
               if (selected.length == 0) {
                 return <Typography style={{fontSize: '0.8em'}}>Click to select tags</Typography>;
               } else {
                 return (
-                  <div>
+                  <div style={{display:'flex',flexWrap:"wrap"}}>
                     {selected.map(value => (
                       <Tag key={value.id} tag={value} deletable={0} />
                     ))}
@@ -63,7 +62,7 @@ class AddTagForm extends React.Component {
               }
             }}
           >
-            {this.state.allTags.map((tag, index) => {
+            {this.props.allTags.map((tag) => {
               return (
                 <MenuItem value={tag} key={tag.id}>
                   {tag.name}

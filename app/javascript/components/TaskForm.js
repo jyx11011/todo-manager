@@ -3,8 +3,7 @@ import DoneCheckCircle from "./DoneCheckCircle";
 import getTaskParams from "./util";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import { Container, TextField } from "@material-ui/core";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
+import { TextField } from "@material-ui/core";
 import AddTagForm from "./AddTagForm";
 import Box from "@material-ui/core/Box";
 
@@ -19,7 +18,6 @@ class TaskForm extends React.Component {
         error: false,
         helperText: null,
         tags: [],
-        allTags: props.allTags
       };
     } else {
       this.state = {
@@ -29,7 +27,6 @@ class TaskForm extends React.Component {
         error: false,
         helperText: null,
         tags: props.tags,
-        allTags: props.allTags
       };
     }
     this.handleChange = this.handleChange.bind(this);
@@ -100,7 +97,7 @@ class TaskForm extends React.Component {
             toggle={this.toggleIsDone}
           />
         </Box>
-        <Box width="100%">
+        <Box width="100%" margin='0 10px 8px 0'>
           <form action="/tasks" method="post" onSubmit={this.handleSubmit}>
             <Grid container>
               <Grid item xs={12}>
@@ -120,20 +117,20 @@ class TaskForm extends React.Component {
               <Grid item xs={12}>
                 <AddTagForm
                   tags={this.state.tags}
-                  allTags={this.state.allTags}
+                  allTags={this.props.allTags}
                   onChange={this.handleTagChange}
                 />
               </Grid>
               <Grid container direction="row" justify="flex-end" spacing={1}>
                 <Grid item>
-                  <Button type="submit" size="small" variant="contained">
+                  <Button type="submit" size="small" variant="outlined">
                     Save
                   </Button>
                 </Grid>
                 <Grid item>
                   <Button
                     size="small"
-                    variant="contained"
+                    variant="outlined"
                     onClick={this.props.cancel}
                   >
                     Cancel

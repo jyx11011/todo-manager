@@ -15,34 +15,24 @@ class Tasks extends React.Component {
     this.getNewTaskButton = this.getNewTaskButton.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleNewTask = this.handleNewTask.bind(this);
+    this.handleNewTag = this.handleNewTag.bind(this);
+    this.renderNewTaskArea = this.renderNewTaskArea.bind(this);
     this.state = {
       tasks: props.data,
-      newTaskArea: null,
-      newTaskButton: <NewTaskButton onClick={this.handleClick} />,
-      allTags:props.allTags
+      isEditingNewTask: false,
+      allTags: props.allTags
     };
   }
 
   handleCancel() {
     this.setState({
-      newTaskArea: null,
-      newTaskButton: this.getNewTaskButton()
+      isEditingNewTask: false
     });
   }
 
   handleClick() {
     this.setState({
-      newTaskArea: (
-        <Box display="flex">
-          <TaskForm
-            task={null}
-            cancel={this.handleCancel}
-            handleNewTask={this.handleNewTask}
-            allTags={this.state.allTags}
-          />
-        </Box>
-      ),
-      newTaskButton: null
+      isEditingNewTask: true
     });
   }
 
@@ -64,8 +54,15 @@ class Tasks extends React.Component {
     newTasks = newTasks.concat([task]);
     this.setState({
       tasks: newTasks,
-      newTaskArea: null,
-      newTaskButton: this.getNewTaskButton()
+      isEditingNewTask: false
+    });
+  }
+
+  handleNewTag(tag) {
+    var newAllTags = this.state.allTags.slice();
+    newAllTags = newAllTags.concat([tag]);
+    this.setState({
+      allTags: newAllTags
     });
   }
 
@@ -94,13 +91,28 @@ class Tasks extends React.Component {
     return items;
   }
 
+  renderNewTaskArea() {
+    if (this.state.isEditingNewTask) {
+      return (
+        <Box display="flex">
+          <TaskForm
+            task={null}
+            cancel={this.handleCancel}
+            handleNewTask={this.handleNewTask}
+            allTags={this.state.allTags}
+          />
+        </Box>
+      );
+    } else {
+      return this.getNewTaskButton();
+    }
+  }
+
   render() {
     return (
       <Box>
         {this.renderTasks()}
-        {this.state.newTaskButton}
-        {this.state.newTaskArea}
-        <TagForm />
+        {this.renderNewTaskArea()}
       </Box>
     );
   }

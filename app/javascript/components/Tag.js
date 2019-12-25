@@ -42,6 +42,7 @@ class Tag extends React.Component {
       <Chip
         size="small"
         variant="outlined"
+        color="primary"
         label={this.props.tag.name}
         onDelete={this.state.onDelete}
         style={{ margin: 1 }}

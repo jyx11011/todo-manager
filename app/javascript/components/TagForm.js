@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { TextField, Button } from "@material-ui/core";
 class TagForm extends React.Component {
   constructor(props) {
@@ -7,8 +6,8 @@ class TagForm extends React.Component {
     this.state = {
       name: ""
     };
-    this.handleChange=this.handleChange.bind(this);
-    this.handleSubmit=this.handleSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleChange(e) {
@@ -28,21 +27,26 @@ class TagForm extends React.Component {
         Accept: "application/json",
         "Content-Type": "application/json"
       }
-    }).then(_response=>{
-      this.setState({
-        name:''
+    })
+      .then(response => response.json())
+      .then(tag => {
+        this.props.onSubmit(tag);
+        this.setState({
+          name: ""
+        });
       });
-    });
   }
   render() {
     return (
       <form action="/tags" method="post" onSubmit={this.handleSubmit}>
         <TextField
-        name="[tag]name"
-        value={this.state.name}
-        onChange={this.handleChange}>
-        </TextField>
-        <Button type="submit" variant="contained" size="small">create</Button>
+          name="[tag]name"
+          value={this.state.name}
+          onChange={this.handleChange}
+        ></TextField>
+        <Button type="submit" variant="contained" size="small">
+          create
+        </Button>
       </form>
     );
   }
