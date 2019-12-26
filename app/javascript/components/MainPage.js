@@ -7,9 +7,12 @@ class MainPage extends React.Component {
     super(props);
     this.state = {
       allTags: props.tags,
-      allTasks: props.tasks
+      allTasks: props.tasks,
+      tagsChosen: [],
+      tagsNotChosen: props.tags
     };
     this.handleNewTag = this.handleNewTag.bind(this);
+    this.handleMoveTag = this.handleMoveTag.bind(this);
     this.handleNewTask = this.handleNewTask.bind(this);
     this.handleDeleteTask = this.handleDeleteTask.bind(this);
     this.handleEditTask = this.handleEditTask.bind(this);
@@ -20,6 +23,22 @@ class MainPage extends React.Component {
     newAllTags = newAllTags.concat([tag]);
     this.setState({
       allTags: newAllTags
+    });
+  }
+
+  handleMoveTag(tag) {
+    var newTagsChosen = this.state.tagsChosen.slice();
+    var newTagsNotChosen = this.state.tagsNotChosen.slice();
+    if (newTagsChosen.includes(tag)) {
+      newTagsChosen.splice(newTagsChosen.indexOf(tag), 1);
+      newTagsNotChosen = newTagsNotChosen.concat([tag]);
+    } else {
+      newTagsNotChosen.splice(newTagsNotChosen.indexOf(tag), 1);
+      newTagsChosen = newTagsChosen.concat([tag]);
+    }
+    this.setState({
+      tagsNotChosen: newTagsNotChosen,
+      tagsChosen: newTagsChosen
     });
   }
 
@@ -52,11 +71,18 @@ class MainPage extends React.Component {
     });
   }
 
+  handleSearch() {
+    
+  }
+
   render() {
     return (
       <React.Fragment>
-        <SearchBar allTags={this.state.allTags}></SearchBar>
-        <TagForm onSubmit={this.handleNewTag} />
+        <SearchBar
+          tagsChosen={this.state.tagsChosen}
+          tagsNotChosen={this.state.tagsNotChosen}
+          handleMoveTag={this.handleMoveTag}
+        ></SearchBar>
         <Tasks
           tasks={this.state.allTasks}
           allTags={this.state.allTags}

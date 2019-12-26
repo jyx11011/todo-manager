@@ -1,5 +1,6 @@
 import React from "react";
 import Chip from "@material-ui/core/Chip";
+import { Typography } from "@material-ui/core";
 
 class Tag extends React.Component {
   constructor(props) {
@@ -21,6 +22,10 @@ class Tag extends React.Component {
   }
 
   handleClick(e) {
+    if(this.props.handleClick!=null) {
+      this.props.handleClick(this.props.tag);
+      return;
+    }
     if(this.props.deletable!=2) return;
     if (this.state.isDelete) {
       this.setState({
@@ -45,7 +50,7 @@ class Tag extends React.Component {
         color="primary"
         label={this.props.tag.name}
         onDelete={this.state.onDelete}
-        style={{ margin: 1 }}
+        style={{ margin: 1}}
         onClick={this.handleClick}
         component="span"
       />

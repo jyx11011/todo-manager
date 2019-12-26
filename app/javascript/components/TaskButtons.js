@@ -32,7 +32,7 @@ class TaskButtons extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <IconButton onClick={this.handleClick}>
+        <IconButton onClick={this.handleClick} disableRipple>
           <MoreHorizIcon />
         </IconButton>
         <Popover

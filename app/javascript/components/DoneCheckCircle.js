@@ -11,6 +11,7 @@ class DoneCheckCircle extends React.Component {
           checkedIcon={<CheckCircleOutlineIcon />}
           checked={this.props.checked}
           onChange={this.props.toggle}
+          disableRipple
         />
     );
   }
