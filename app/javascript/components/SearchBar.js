@@ -1,5 +1,6 @@
 import React from "react";
 import Tag from "./Tag";
+import getTaskParams from "./util";
 import Box from "@material-ui/core/Box";
 import Collapse from "@material-ui/core/Collapse";
 import IconButton from "@material-ui/core/IconButton";
@@ -33,7 +34,14 @@ class SearchBar extends React.Component {
     this.props.handleMoveTag(tag);
   }
 
-  handleSearch() {}
+  handleSearch() {
+    var params = getTaskParams({ tags: this.props.tagsChosen });
+    fetch("./tasks" + params, {
+      method: "get"
+    })
+      .then(response => response.json())
+      .then(tasks => this.props.handleSearch(tasks));
+  }
 
   render() {
     return (

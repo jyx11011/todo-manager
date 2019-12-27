@@ -1,7 +1,9 @@
 import React from "react";
 import SearchBar from "./SearchBar";
 import Tasks from "./Tasks";
-import TagForm from "./TagForm";
+import Nav from "./Nav";
+import { ThemeProvider, useTheme, Toolbar } from "@material-ui/core";
+import createMixins from "@material-ui/core/styles/createMixins";
 class MainPage extends React.Component {
   constructor(props) {
     super(props);
@@ -9,13 +11,15 @@ class MainPage extends React.Component {
       allTags: props.tags,
       allTasks: props.tasks,
       tagsChosen: [],
-      tagsNotChosen: props.tags
+      tagsNotChosen: props.tags,
+      tasksShown: props.tasks
     };
     this.handleNewTag = this.handleNewTag.bind(this);
     this.handleMoveTag = this.handleMoveTag.bind(this);
     this.handleNewTask = this.handleNewTask.bind(this);
     this.handleDeleteTask = this.handleDeleteTask.bind(this);
     this.handleEditTask = this.handleEditTask.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
   }
 
   handleNewTag(tag) {
@@ -71,26 +75,33 @@ class MainPage extends React.Component {
     });
   }
 
-  handleSearch() {
-    
+  handleSearch(result) {
+    this.setState({
+      tasksShown: result
+    })
   }
 
   render() {
     return (
-      <React.Fragment>
-        <SearchBar
-          tagsChosen={this.state.tagsChosen}
-          tagsNotChosen={this.state.tagsNotChosen}
-          handleMoveTag={this.handleMoveTag}
-        ></SearchBar>
-        <Tasks
-          tasks={this.state.allTasks}
-          allTags={this.state.allTags}
-          handleDeleteTask={this.handleDeleteTask}
-          handleNewTask={this.handleNewTask}
-          handleEditTask={this.handleEditTask}
-        ></Tasks>
-      </React.Fragment>
+      <div style={{ display: "flex" }}>
+        <Nav />
+        <main style={{ flexGrow: 1, padding: '10px 20px 10px 10px'}}>
+          <Toolbar/>
+          <SearchBar
+            tagsChosen={this.state.tagsChosen}
+            tagsNotChosen={this.state.tagsNotChosen}
+            handleMoveTag={this.handleMoveTag}
+            handleSearch={this.handleSearch}
+          ></SearchBar>
+          <Tasks
+            tasks={this.state.tasksShown}
+            allTags={this.state.allTags}
+            handleDeleteTask={this.handleDeleteTask}
+            handleNewTask={this.handleNewTask}
+            handleEditTask={this.handleEditTask}
+          ></Tasks>
+        </main>
+      </div>
     );
   }
 }

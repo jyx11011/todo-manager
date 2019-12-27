@@ -50,7 +50,7 @@ class Tasks extends React.Component {
   }
 
   getNewTaskButton() {
-    return <NewTaskButton onClick={this.handleClick} />;
+    return <NewTaskButton onClick={this.handleClick}/>;
   }
 
   renderTasks() {

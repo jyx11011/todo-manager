@@ -11,6 +11,7 @@ class NewTaskButton extends React.Component {
         startIcon={<AddIcon />}
         size="small"
         onClick={this.props.onClick}
+        style={{marginLeft: 10, marginTop: 5}}
       >Add new task
       </Button>
     );
