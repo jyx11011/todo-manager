@@ -30,7 +30,12 @@ class TasksController < ApplicationController
 
   def index
     if params[:task] && params[:task][:tag_ids]
-      @tasks=Task.includes(:tags).where(tags: {id:params[:task][:tag_ids]})
+      tags = params[:task][:tag_ids];
+      if(tags==='all') 
+        @tasks = Task.all
+      else
+        @tasks=Task.includes(:tags).where(tags: {id:params[:task][:tag_ids]})
+      end
       render json: @tasks
     else
       puts 'all'

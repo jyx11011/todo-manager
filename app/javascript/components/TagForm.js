@@ -1,10 +1,14 @@
 import React from "react";
+import LabelIcon from "@material-ui/icons/Label";
+import Grid from "@material-ui/core/Grid";
 import { TextField, Button } from "@material-ui/core";
 class TagForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: ""
+      name: "",
+      helperText: null,
+      error: false
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -12,12 +16,21 @@ class TagForm extends React.Component {
 
   handleChange(e) {
     this.setState({
-      name: e.target.value
+      name: e.target.value,
+      helperText: "",
+      error: false
     });
   }
 
   handleSubmit(e) {
     e.preventDefault();
+    if (this.state.name.trim().length == 0) {
+      this.setState({
+        error: true,
+        helperText: "name cannot be empty"
+      });
+      return;
+    }
     var params = new URLSearchParams();
     params.set("tag[name]", this.state.name);
     fetch("/tags", {
@@ -39,14 +52,23 @@ class TagForm extends React.Component {
   render() {
     return (
       <form action="/tags" method="post" onSubmit={this.handleSubmit}>
-        <TextField
-          name="[tag]name"
-          value={this.state.name}
-          onChange={this.handleChange}
-        ></TextField>
-        <Button type="submit" variant="contained" size="small">
-          create
-        </Button>
+        <Grid container spacing={1} alignItems="flex-end">
+          <Grid item>
+            <LabelIcon fontSize="small" />
+          </Grid>
+          <Grid item>
+            <TextField
+              name="[tag]name"
+              value={this.state.name}
+              onChange={this.handleChange}
+              error={this.state.error}
+              placeholder={this.state.helperText}
+            ></TextField>
+            <Button type="submit" variant="contained" size="small">
+              create
+            </Button>
+          </Grid>
+        </Grid>
       </form>
     );
   }

@@ -1,9 +1,9 @@
-import React from "react"
-import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
+import React from "react";
+import Button from "@material-ui/core/Button";
+import AddIcon from "@material-ui/icons/Add";
 
 class NewTaskButton extends React.Component {
-  render () {
+  render() {
     return (
       <Button
         variant="contained"
@@ -11,11 +11,12 @@ class NewTaskButton extends React.Component {
         startIcon={<AddIcon />}
         size="small"
         onClick={this.props.onClick}
-        style={{marginLeft: 10, marginTop: 5}}
-      >Add new task
+        style={{ marginLeft: 10, marginTop: 5 }}
+      >
+        Add new task
       </Button>
     );
   }
 }
 
-export default NewTaskButton
+export default NewTaskButton;

@@ -2,8 +2,7 @@ import React from "react";
 import SearchBar from "./SearchBar";
 import Tasks from "./Tasks";
 import Nav from "./Nav";
-import { ThemeProvider, useTheme, Toolbar } from "@material-ui/core";
-import createMixins from "@material-ui/core/styles/createMixins";
+import { Toolbar } from "@material-ui/core";
 class MainPage extends React.Component {
   constructor(props) {
     super(props);
@@ -20,13 +19,18 @@ class MainPage extends React.Component {
     this.handleDeleteTask = this.handleDeleteTask.bind(this);
     this.handleEditTask = this.handleEditTask.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
+    this.handleClearAllTags = this.handleClearAllTags.bind(this);
+    this.handleAddTaskButtonClick = this.handleAddTaskButtonClick.bind(this);
   }
 
   handleNewTag(tag) {
     var newAllTags = this.state.allTags.slice();
     newAllTags = newAllTags.concat([tag]);
+    var newTagsNotChosen = this.state.tagsNotChosen.slice();
+    newTagsNotChosen = newTagsNotChosen.concat([tag]);
     this.setState({
-      allTags: newAllTags
+      allTags: newAllTags,
+      tagsNotChosen: newTagsNotChosen
     });
   }
 
@@ -47,23 +51,34 @@ class MainPage extends React.Component {
   }
 
   handleDeleteTask(id) {
-    var newTasks = this.state.allTasks.slice();
+    var newTasks = this.state.tasksShown.slice();
+    var newAllTasks = this.state.allTasks.slice();
     for (var i = 0; i < newTasks.length; i++) {
       if (newTasks[i].id == id) {
         newTasks.splice(i, 1);
         break;
       }
     }
+    for (var i = 0; i < newAllTasks.length; i++) {
+      if (newAllTasks[i].id == id) {
+        newAllTasks.splice(i, 1);
+        break;
+      }
+    }
     this.setState({
-      allTasks: newTasks
+      tasksShown: newTasks,
+      allTags: newAllTasks
     });
   }
 
   handleNewTask(task) {
-    var newTasks = this.state.allTasks.slice();
+    var newTasks = this.state.tasksShown.slice();
+    var newAllTasks = this.state.allTasks.slice();
     newTasks = newTasks.concat([task]);
+    newAllTasks = newAllTasks.concat([task]);
     this.setState({
-      allTasks: newTasks
+      tasksShown: newTasks,
+      allTasks: newAllTasks
     });
   }
 
@@ -78,20 +93,37 @@ class MainPage extends React.Component {
   handleSearch(result) {
     this.setState({
       tasksShown: result
-    })
+    });
+  }
+
+  handleClearAllTags() {
+    this.setState({
+      tagsChosen: [],
+      tagsNotChosen: this.state.allTags
+    });
+  }
+
+  handleAddTaskButtonClick() {
+    document.getElementById("new-task").scrollIntoView({
+      behavior: "smooth"
+    });
   }
 
   render() {
     return (
       <div style={{ display: "flex" }}>
-        <Nav />
-        <main style={{ flexGrow: 1, padding: '10px 20px 10px 10px'}}>
-          <Toolbar/>
+        <Nav
+          handleAddTaskButtonClick={this.handleAddTaskButtonClick}
+          handleNewTag={this.handleNewTag}
+        />
+        <main style={{ flexGrow: 1, padding: "10px 20px 10px 10px" }}>
+          <Toolbar />
           <SearchBar
             tagsChosen={this.state.tagsChosen}
             tagsNotChosen={this.state.tagsNotChosen}
             handleMoveTag={this.handleMoveTag}
             handleSearch={this.handleSearch}
+            handleClearAllTags={this.handleClearAllTags}
           ></SearchBar>
           <Tasks
             tasks={this.state.tasksShown}

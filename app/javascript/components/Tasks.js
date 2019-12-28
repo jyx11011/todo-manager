@@ -2,7 +2,6 @@ import React from "react";
 import Task from "./Task";
 import NewTaskButton from "./NewTaskButton";
 import TaskForm from "./TaskForm";
-import TagForm from "./TagForm";
 import Divider from "@material-ui/core/Divider";
 import Box from "@material-ui/core/Box";
 
@@ -50,7 +49,11 @@ class Tasks extends React.Component {
   }
 
   getNewTaskButton() {
-    return <NewTaskButton onClick={this.handleClick}/>;
+    return (
+      <Box id="new-task">
+        <NewTaskButton onClick={this.handleClick} />
+      </Box>
+    );
   }
 
   renderTasks() {
@@ -78,7 +81,7 @@ class Tasks extends React.Component {
   renderNewTaskArea() {
     if (this.state.isEditingNewTask) {
       return (
-        <Box display="flex">
+        <Box display="flex" id="new-task">
           <TaskForm
             task={null}
             cancel={this.handleCancel}
