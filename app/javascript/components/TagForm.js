@@ -1,17 +1,20 @@
 import React from "react";
-import LabelIcon from "@material-ui/icons/Label";
+
 import Grid from "@material-ui/core/Grid";
 import { TextField, Button } from "@material-ui/core";
 class TagForm extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      name: "",
+      name: props.tag ? props.tag.name : "",
       helperText: null,
-      error: false
+      error: false,
+      isEdit: props.tag ? true : false
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleEdit = this.handleEdit.bind(this);
   }
 
   handleChange(e) {
@@ -20,6 +23,33 @@ class TagForm extends React.Component {
       helperText: "",
       error: false
     });
+  }
+
+  handleEdit() {
+    var params = new URLSearchParams();
+    params.set("tag[name]", this.state.name.trim());
+    var id = this.props.tag.id;
+    fetch("/tags/" + id, {
+      method: "put",
+      body: params,
+      header: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      }
+    })
+      .then(response => {
+        if (response.ok) return response.json();
+        else throw Error();
+      })
+      .then(tag => {
+        this.props.handleEdit(tag);
+      })
+      .catch(error => {
+        this.setState({
+          helperText: "exists already",
+          error: true
+        });
+      });
   }
 
   handleSubmit(e) {
@@ -31,8 +61,12 @@ class TagForm extends React.Component {
       });
       return;
     }
+    if (this.state.isEdit) {
+      this.handleEdit();
+      return;
+    }
     var params = new URLSearchParams();
-    params.set("tag[name]", this.state.name);
+    params.set("tag[name]", this.state.name.trim());
     fetch("/tags", {
       method: "post",
       body: params,
@@ -41,34 +75,38 @@ class TagForm extends React.Component {
         "Content-Type": "application/json"
       }
     })
-      .then(response => response.json())
+      .then(response => {
+        if (response.ok) return response.json();
+        else throw Error();
+      })
       .then(tag => {
         this.props.onSubmit(tag);
+        if (this.props.clear) {
+          this.setState({
+            name: ""
+          });
+        }
+      })
+      .catch(error => {
         this.setState({
-          name: ""
+          helperText: "exists already",
+          error: true
         });
       });
   }
   render() {
     return (
       <form action="/tags" method="post" onSubmit={this.handleSubmit}>
-        <Grid container spacing={1} alignItems="flex-end">
-          <Grid item>
-            <LabelIcon fontSize="small" />
-          </Grid>
-          <Grid item>
-            <TextField
-              name="[tag]name"
-              value={this.state.name}
-              onChange={this.handleChange}
-              error={this.state.error}
-              placeholder={this.state.helperText}
-            ></TextField>
-            <Button type="submit" variant="contained" size="small">
-              create
-            </Button>
-          </Grid>
-        </Grid>
+        <TextField
+          name="[tag]name"
+          value={this.state.name}
+          onChange={this.handleChange}
+          error={this.state.error}
+          helperText={this.state.helperText}
+        ></TextField>
+        <Button type="submit" variant="contained" size="small">
+          {this.props.text ? this.props.text : "create"}
+        </Button>
       </form>
     );
   }

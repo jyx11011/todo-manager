@@ -8,19 +8,16 @@ import IconButton from "@material-ui/core/IconButton";
 import AddIcon from "@material-ui/icons/Add";
 import LabelIcon from "@material-ui/icons/Label";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
-import Button from "@material-ui/core/Button";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import MailIcon from "@material-ui/icons/Mail";
 import MenuIcon from "@material-ui/icons/Menu";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import { withStyles } from "@material-ui/core/styles";
 import TagForm from "./TagForm";
+import { Tooltip } from "@material-ui/core";
 
 const drawerWidth = 240;
 
@@ -50,6 +47,17 @@ const StyledMenuButton = withStyles({
   }
 })(IconButton);
 
+const drawerList = [
+  {
+    text: "Todo list",
+    href: "/tasks"
+  },
+  {
+    text: "Tags",
+    href: "/tags"
+  }
+];
+
 class Nav extends React.Component {
   constructor(props) {
     super(props);
@@ -64,6 +72,7 @@ class Nav extends React.Component {
     this.getTagArea = this.getTagArea.bind(this);
     this.handleCloseTagForm = this.handleCloseTagForm.bind(this);
     this.handleNewTag = this.handleNewTag.bind(this);
+    this.getNewTaskButton = this.getNewTaskButton.bind(this);
   }
 
   handleAddTaskButtonClick() {
@@ -78,7 +87,7 @@ class Nav extends React.Component {
 
   handleAddTagButtonClick() {
     this.setState({
-      isEditTag: true
+      isEditTag: !this.state.isEditTag
     });
   }
 
@@ -93,10 +102,17 @@ class Nav extends React.Component {
   }
 
   getTagArea() {
+    if (!this.props.createTag) return null;
     if (this.state.isEditTag) {
       return (
         <React.Fragment>
-          <TagForm onSubmit={this.handleNewTag} />
+          <IconButton
+            style={{ color: "white", marginLeft: "4px" }}
+            onClick={this.handleAddTagButtonClick}
+          >
+            <LabelIcon fontSize="small" />
+          </IconButton>
+          <TagForm onSubmit={this.handleNewTag} clear={true} />
           <IconButton size="small" onClick={this.handleCloseTagForm}>
             <HighlightOffIcon fontSize="small" />
           </IconButton>
@@ -104,11 +120,27 @@ class Nav extends React.Component {
       );
     } else {
       return (
-        <IconButton onClick={this.handleAddTagButtonClick}>
-          <LabelIcon fontSize="small" />
-        </IconButton>
+        <Tooltip title="Create new tag" style={{ marginLeft: "4px" }}>
+          <IconButton onClick={this.handleAddTagButtonClick} disableRipple>
+            <LabelIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
       );
     }
+  }
+
+  getNewTaskButton() {
+    if (!this.props.taskButton) return null;
+    return (
+      <Tooltip title="Create new task">
+        <IconButton
+          onClick={this.handleAddTaskButtonClick}
+          style={{ marginLeft: "4px" }}
+        >
+          <AddIcon fontSize="small" />
+        </IconButton>
+      </Tooltip>
+    );
   }
   getDrawer() {
     return (
@@ -116,9 +148,9 @@ class Nav extends React.Component {
         <Toolbar />
         <Divider />
         <List>
-          {["Todo list", "Trash", "Tags"].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemText primary={text} />
+          {drawerList.map(item => (
+            <ListItem button key={item.text} component="a" href={item.href}>
+              <ListItemText primary={item.text} />
             </ListItem>
           ))}
         </List>
@@ -135,11 +167,9 @@ class Nav extends React.Component {
               <MenuIcon />
             </StyledMenuButton>
             <Typography variant="h6" noWrap>
-              Todo Manager
+              {this.props.title}
             </Typography>
-            <IconButton onClick={this.handleAddTaskButtonClick}>
-              <AddIcon fontSize="small" />
-            </IconButton>
+            {this.getNewTaskButton()}
             {this.getTagArea()}
           </Toolbar>
         </StyledAppBar>

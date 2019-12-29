@@ -104,15 +104,22 @@ class MainPage extends React.Component {
   }
 
   handleAddTaskButtonClick() {
-    document.getElementById("new-task").scrollIntoView({
+    var newTaskEle = document.getElementById("new-task");
+    newTaskEle.scrollIntoView({
       behavior: "smooth"
     });
+    if (document.getElementById("new-task-button")) {
+      document.getElementById("new-task-button").click();
+    }
   }
 
   render() {
     return (
       <div style={{ display: "flex" }}>
         <Nav
+          title="Todo list"
+          taskButton={true}
+          createTag={true}
           handleAddTaskButtonClick={this.handleAddTaskButtonClick}
           handleNewTag={this.handleNewTag}
         />
