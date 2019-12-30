@@ -1,0 +1,2 @@
+module DeletedTasksHelper
+end

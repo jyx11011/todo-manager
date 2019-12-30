@@ -1,0 +1,115 @@
+import React from "react";
+import PropTypes from "prop-types";
+import DeletedTasks from "./DeletedTasks";
+import Nav from "./Nav";
+import Toolbar from "@material-ui/core/Toolbar";
+import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
+import DeleteConfirmation from "./DeleteConfirmation";
+class TrashMainPage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      tasks: props.tasks,
+      confirmationOpen: false
+    };
+    this.removeTask = this.removeTask.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+    this.handleRecover = this.handleRecover.bind(this);
+    this.renderTasks = this.renderTasks.bind(this);
+    this.handleEmptyTrash = this.handleEmptyTrash.bind(this);
+    this.handleToggleOpen = this.handleToggleOpen.bind(this);
+    this.getEmptyTrashButton = this.getEmptyTrashButton.bind(this);
+  }
+
+  removeTask(id) {
+    var newTasks = this.state.tasks.slice();
+    for (var i = 0; i < newTasks.length; i++) {
+      if (newTasks[i].id == id) {
+        newTasks.splice(i, 1);
+        break;
+      }
+    }
+    return newTasks;
+  }
+
+  handleDelete(id) {
+    var newTasks = this.removeTask(id);
+    this.setState({
+      tasks: newTasks
+    });
+  }
+
+  handleRecover(id) {
+    var newTasks = this.removeTask(id);
+    this.setState({
+      tasks: newTasks
+    });
+  }
+
+  renderTasks() {
+    if (this.state.tasks.length) {
+      return (
+        <React.Fragment>
+          <DeletedTasks
+            tasks={this.state.tasks}
+            handleDelete={this.handleDelete}
+            handleRecover={this.handleRecover}
+          />
+        </React.Fragment>
+      );
+    } else {
+      return <em>Your trash is empty...</em>;
+    }
+  }
+
+  handleEmptyTrash() {
+    fetch("/deleted_tasks/destroy", {
+      method: "get"
+    }).then(response => {
+      this.setState({
+        tasks: [],
+        confirmationOpen: false
+      });
+    });
+  }
+
+  handleToggleOpen() {
+    this.setState({
+      confirmationOpen: !this.state.confirmationOpen
+    });
+  }
+
+  getEmptyTrashButton() {
+    return (
+      <React.Fragment>
+        <Button
+          onClick={this.handleToggleOpen}
+          disabled={this.state.tasks.length == 0}
+        >
+          Empty trash
+        </Button>
+        <DeleteConfirmation
+          open={this.state.confirmationOpen}
+          handleDelete={this.handleEmptyTrash}
+          handleCancel={this.handleToggleOpen}
+          title="Are you sure you want to delete all tasks in trash?"
+        />
+      </React.Fragment>
+    );
+  }
+
+  render() {
+    return (
+      <div style={{ display: "flex" }}>
+        <Nav title="Trash" buttons={this.getEmptyTrashButton()} />
+        <main style={{ flexGrow: 1, padding: "0px 20px 10px 10px" }}>
+          <Toolbar />
+          <Box padding="20px">{this.renderTasks()}</Box>
+        </main>
+      </div>
+    );
+  }
+}
+
+export default TrashMainPage;

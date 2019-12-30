@@ -15,7 +15,7 @@ class TasksController < ApplicationController
 
   def destroy
     @task=Task.find(params[:id])
-    @task.destroy
+    @task.update({isDeleted: true})
     head :no_content
   end
 
@@ -32,14 +32,14 @@ class TasksController < ApplicationController
     if params[:task] && params[:task][:tag_ids]
       tags = params[:task][:tag_ids];
       if(tags==='all') 
-        @tasks = Task.all
+        @tasks = Task.where(isDeleted: false)
       else
-        @tasks=Task.includes(:tags).where(tags: {id:params[:task][:tag_ids]})
+        @tasks=Task.where(isDeleted: false).includes(:tags).where(tags: {id:params[:task][:tag_ids]})
       end
       render json: @tasks
     else
       puts 'all'
-      @tasks = Task.all
+      @tasks = Task.where(isDeleted: false)
     end
   end
 

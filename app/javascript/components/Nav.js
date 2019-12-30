@@ -55,6 +55,10 @@ const drawerList = [
   {
     text: "Tags",
     href: "/tags"
+  },
+  {
+    text: "Trash",
+    href: "/trash"
   }
 ];
 
@@ -171,6 +175,7 @@ class Nav extends React.Component {
             </Typography>
             {this.getNewTaskButton()}
             {this.getTagArea()}
+            {this.props.buttons}
           </Toolbar>
         </StyledAppBar>
         <StyledBox component="nav">
