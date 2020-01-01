@@ -1,8 +1,27 @@
 import React from "react";
-import SearchBar from "./SearchBar";
 import Tasks from "./Tasks";
 import Nav from "./Nav";
-import { Toolbar } from "@material-ui/core";
+import { Toolbar, IconButton } from "@material-ui/core";
+import FilterSidePane from "./FilterSidePane";
+import FilterListIcon from "@material-ui/icons/FilterList";
+
+const filterWidth = 240;
+const mainStyle = {
+  flexGrow: 1,
+  padding: "10px 20px 10px 10px",
+  marginRight: -filterWidth,
+  transition: "margin",
+  width: "100%",
+  zIndex: 1
+};
+
+const mainShiftStyle = {
+  padding: "10px 20px 10px 10px",
+  marginRight: 0,
+  transition: "margin",
+  width: "100%"
+};
+
 class MainPage extends React.Component {
   constructor(props) {
     super(props);
@@ -11,7 +30,8 @@ class MainPage extends React.Component {
       allTasks: props.tasks,
       tagsChosen: [],
       tagsNotChosen: props.tags,
-      tasksShown: props.tasks
+      tasksShown: props.tasks,
+      filterOpen: false
     };
     this.handleNewTag = this.handleNewTag.bind(this);
     this.handleMoveTag = this.handleMoveTag.bind(this);
@@ -21,6 +41,8 @@ class MainPage extends React.Component {
     this.handleSearch = this.handleSearch.bind(this);
     this.handleClearAllTags = this.handleClearAllTags.bind(this);
     this.handleAddTaskButtonClick = this.handleAddTaskButtonClick.bind(this);
+    this.handleFilterToggle = this.handleFilterToggle.bind(this);
+    this.getFilterButton = this.getFilterButton.bind(this);
   }
 
   handleNewTag(tag) {
@@ -113,6 +135,19 @@ class MainPage extends React.Component {
     }
   }
 
+  handleFilterToggle() {
+    this.setState({
+      filterOpen: !this.state.filterOpen
+    });
+  }
+
+  getFilterButton() {
+    return (
+      <IconButton disableRipple onClick={this.handleFilterToggle}>
+        <FilterListIcon />
+      </IconButton>
+    );
+  }
   render() {
     return (
       <div style={{ display: "flex" }}>
@@ -120,18 +155,12 @@ class MainPage extends React.Component {
           title="Todo list"
           taskButton={true}
           createTag={true}
+          buttons={this.getFilterButton()}
           handleAddTaskButtonClick={this.handleAddTaskButtonClick}
           handleNewTag={this.handleNewTag}
         />
-        <main style={{ flexGrow: 1, padding: "10px 20px 10px 10px" }}>
+        <main style={this.state.filterOpen ? mainShiftStyle : mainStyle}>
           <Toolbar />
-          <SearchBar
-            tagsChosen={this.state.tagsChosen}
-            tagsNotChosen={this.state.tagsNotChosen}
-            handleMoveTag={this.handleMoveTag}
-            handleSearch={this.handleSearch}
-            handleClearAllTags={this.handleClearAllTags}
-          ></SearchBar>
           <Tasks
             tasks={this.state.tasksShown}
             allTags={this.state.allTags}
@@ -140,6 +169,15 @@ class MainPage extends React.Component {
             handleEditTask={this.handleEditTask}
           ></Tasks>
         </main>
+        <FilterSidePane
+          open={this.state.filterOpen}
+          handelDrawerToggle={this.handleFilterToggle}
+          tagsChosen={this.state.tagsChosen}
+          tagsNotChosen={this.state.tagsNotChosen}
+          handleMoveTag={this.handleMoveTag}
+          handleSearch={this.handleSearch}
+          handleClearAllTags={this.handleClearAllTags}
+        />
       </div>
     );
   }

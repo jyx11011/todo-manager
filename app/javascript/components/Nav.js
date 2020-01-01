@@ -19,7 +19,7 @@ import { withStyles } from "@material-ui/core/styles";
 import TagForm from "./TagForm";
 import { Tooltip } from "@material-ui/core";
 
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 const StyledAppBar = withStyles({
   root: {

@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import DeletedTasks from "./DeletedTasks";
 import Nav from "./Nav";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -66,7 +65,7 @@ class TrashMainPage extends React.Component {
   handleEmptyTrash() {
     fetch("/deleted_tasks/destroy", {
       method: "get"
-    }).then(response => {
+    }).then(() => {
       this.setState({
         tasks: [],
         confirmationOpen: false

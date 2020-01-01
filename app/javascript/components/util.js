@@ -10,7 +10,7 @@ function getTaskParams(task) {
       (task["tags"].length
         ? task["tags"].map(tag => "task[tag_ids][]=" + tag.id).join("&")
         : "task[tag_ids][]");
-  return "?".concat(params);
+  return params ? "?".concat(params) : "";
 }
 
 export default getTaskParams;

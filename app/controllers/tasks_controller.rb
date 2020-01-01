@@ -28,19 +28,26 @@ class TasksController < ApplicationController
     end
   end
 
-  def index
-    if params[:task] && params[:task][:tag_ids]
+  def filter
+    if params[:task]
       tags = params[:task][:tag_ids];
-      if(tags==='all') 
-        @tasks = Task.where(isDeleted: false)
-      else
-        @tasks=Task.where(isDeleted: false).includes(:tags).where(tags: {id:params[:task][:tag_ids]})
+      isDone = params[:task][:isDone];
+      if (tags && isDone)
+        @tasks = Task.where(isDeleted: false, isDone: false).joins(:tags).where(tags: {id:params[:task][:tag_ids]}).distinct
+      elsif (tags)
+        @tasks=Task.where(isDeleted: false).joins(:tags).where(tags: {id:params[:task][:tag_ids]}).distinct
+      elsif (isDone)
+        @tasks=Task.where(isDeleted: false, isDone: false)
       end
-      render json: @tasks
     else
-      puts 'all'
-      @tasks = Task.where(isDeleted: false)
+      @tasks=Task.where(isDeleted: false)
     end
+    render json: @tasks
+  end
+
+
+  def index
+    @tasks = Task.where(isDeleted: false)
   end
 
   private
