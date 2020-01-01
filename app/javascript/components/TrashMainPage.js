@@ -64,7 +64,7 @@ class TrashMainPage extends React.Component {
 
   handleEmptyTrash() {
     fetch("/deleted_tasks/destroy", {
-      method: "get"
+      method: "post"
     }).then(() => {
       this.setState({
         tasks: [],

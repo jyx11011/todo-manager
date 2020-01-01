@@ -23,7 +23,7 @@ class DeletedTask extends React.Component {
   handleDelete() {
     var id = this.props.task.id;
     fetch("/deleted_tasks/destroy/" + id, {
-      method: "get"
+      method: "post"
     }).then(() => {
       this.props.handleDelete(this.props.task.id);
       this.handleToggleOpen();
@@ -33,7 +33,7 @@ class DeletedTask extends React.Component {
   handleRecover() {
     var id = this.props.task.id;
     fetch("/deleted_tasks/recover/" + id, {
-      method: "get"
+      method: "post"
     }).then(() => {
       this.props.handleRecover(this.props.task.id);
     });
