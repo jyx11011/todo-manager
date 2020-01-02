@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'sessions/new'
+  post 'sessions', to: 'sessions#create'
   get 'trash', to: 'deleted_tasks#index'
   post 'deleted_tasks/destroy/:id', to: 'deleted_tasks#destroy'
   post 'deleted_tasks/destroy'
@@ -7,7 +9,8 @@ Rails.application.routes.draw do
   get 'tasks/index'
 
   resources :tasks, :tags
+  resources :users
 
-  root 'tasks#index'
+  root 'sessions#new'
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

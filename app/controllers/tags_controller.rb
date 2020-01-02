@@ -1,5 +1,4 @@
 class TagsController < ApplicationController
-  protect_from_forgery :except => :index
   def new
     @tag = Tag.new
   end

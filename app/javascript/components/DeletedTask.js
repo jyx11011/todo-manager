@@ -2,6 +2,7 @@ import React from "react";
 import DoneCheckCircle from "./DoneCheckCircle";
 import DeleteConfirmation from "./DeleteConfirmation";
 import Tag from "./Tag";
+import Rails from "@rails/ujs";
 import Box from "@material-ui/core/Box";
 import DeleteIcon from "@material-ui/icons/Delete";
 import ReplyIcon from "@material-ui/icons/Reply";
@@ -23,7 +24,11 @@ class DeletedTask extends React.Component {
   handleDelete() {
     var id = this.props.task.id;
     fetch("/deleted_tasks/destroy/" + id, {
-      method: "post"
+      method: "post",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      credentials: "same-origin"
     }).then(() => {
       this.props.handleDelete(this.props.task.id);
       this.handleToggleOpen();
@@ -33,7 +38,11 @@ class DeletedTask extends React.Component {
   handleRecover() {
     var id = this.props.task.id;
     fetch("/deleted_tasks/recover/" + id, {
-      method: "post"
+      method: "post",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      credentials: "same-origin"
     }).then(() => {
       this.props.handleRecover(this.props.task.id);
     });

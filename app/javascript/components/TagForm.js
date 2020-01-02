@@ -1,5 +1,5 @@
 import React from "react";
-
+import Rails from "@rails/ujs";
 import Grid from "@material-ui/core/Grid";
 import { TextField, Button } from "@material-ui/core";
 class TagForm extends React.Component {
@@ -32,10 +32,10 @@ class TagForm extends React.Component {
     fetch("/tags/" + id, {
       method: "put",
       body: params,
-      header: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      }
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      credentials: "same-origin"
     })
       .then(response => {
         if (response.ok) return response.json();
@@ -70,10 +70,10 @@ class TagForm extends React.Component {
     fetch("/tags", {
       method: "post",
       body: params,
-      header: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      }
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      credentials: "same-origin"
     })
       .then(response => {
         if (response.ok) return response.json();

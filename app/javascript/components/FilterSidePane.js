@@ -1,5 +1,6 @@
 import React from "react";
 import Tag from "./Tag";
+import Rails from "@rails/ujs";
 import getTaskParams from "./util";
 import Box from "@material-ui/core/Box";
 import Collapse from "@material-ui/core/Collapse";
@@ -45,7 +46,11 @@ class FilterSidePane extends React.Component {
     }
     var params = getTaskParams(filter);
     fetch("./tasks/filter" + params, {
-      method: "get"
+      method: "get",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      credentials: "same-origin"
     })
       .then(response => response.json())
       .then(tasks => {

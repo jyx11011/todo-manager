@@ -1,5 +1,4 @@
 class TasksController < ApplicationController
-  protect_from_forgery :except => :index
   def new
     @task = Task.new
   end
@@ -47,6 +46,7 @@ class TasksController < ApplicationController
 
 
   def index
+    puts session[:user_id]
     @tasks = Task.where(isDeleted: false)
   end
 

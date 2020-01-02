@@ -1,7 +1,9 @@
 import React from "react";
+import Rails from "@rails/ujs";
 import getTaskParams from "./util";
 import DoneCheckCircle from "./DoneCheckCircle";
 import TaskForm from "./TaskForm";
+import Rails from "@rails/ujs";
 import TaskButtons from "./TaskButtons";
 import Tag from "./Tag";
 import Box from "@material-ui/core/Box";
@@ -31,7 +33,11 @@ class Task extends React.Component {
   handleDelete() {
     var id = this.props.task.id;
     fetch("/tasks/" + id, {
-      method: "delete"
+      method: "delete",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      credentials: "same-origin"
     }).then(_response => {
       this.props.handleDelete(id);
     });
@@ -57,7 +63,11 @@ class Task extends React.Component {
   onEditSubmit(task) {
     var id = this.props.task.id;
     fetch("/tasks/" + id + getTaskParams(task), {
-      method: "put"
+      method: "put",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      credentials: "same-origin"
     })
       .then(response => response.json())
       .then(newTask => {

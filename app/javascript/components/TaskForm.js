@@ -1,4 +1,5 @@
 import React from "react";
+import Rails from "@rails/ujs";
 import DoneCheckCircle from "./DoneCheckCircle";
 import getTaskParams from "./util";
 import Button from "@material-ui/core/Button";
@@ -17,7 +18,7 @@ class TaskForm extends React.Component {
         isEdit: false,
         error: false,
         helperText: null,
-        tags: [],
+        tags: []
       };
     } else {
       this.state = {
@@ -26,7 +27,7 @@ class TaskForm extends React.Component {
         isEdit: true,
         error: false,
         helperText: null,
-        tags: props.tags,
+        tags: props.tags
       };
     }
     this.handleChange = this.handleChange.bind(this);
@@ -78,7 +79,11 @@ class TaskForm extends React.Component {
       tags: this.state.tags
     });
     fetch("/tasks" + params, {
-      method: "post"
+      method: "post",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      credentials: "same-origin"
     })
       .then(response => {
         return response.json();
@@ -97,7 +102,7 @@ class TaskForm extends React.Component {
             toggle={this.toggleIsDone}
           />
         </Box>
-        <Box width="100%" margin='0 10px 8px 0'>
+        <Box width="100%" margin="0 10px 8px 0">
           <form action="/tasks" method="post" onSubmit={this.handleSubmit}>
             <Grid container>
               <Grid item xs={12}>

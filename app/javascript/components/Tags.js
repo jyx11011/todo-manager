@@ -1,4 +1,5 @@
 import React from "react";
+import Rails from "@rails/ujs";
 import TagForm from "./TagForm";
 import List from "@material-ui/core/List";
 import { ListItem, Button, IconButton, Divider } from "@material-ui/core";
@@ -27,7 +28,11 @@ class Tags extends React.Component {
 
   handleDelete(id) {
     fetch("./tags/" + id, {
-      method: "delete"
+      method: "delete",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      credentials: "same-origin"
     }).then(response => {
       this.props.handleDelete(id);
     });

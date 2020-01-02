@@ -1,4 +1,5 @@
 import React from "react";
+import Rails from "@rails/ujs";
 import DeletedTasks from "./DeletedTasks";
 import Nav from "./Nav";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -64,7 +65,11 @@ class TrashMainPage extends React.Component {
 
   handleEmptyTrash() {
     fetch("/deleted_tasks/destroy", {
-      method: "post"
+      method: "post",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      credentials: "same-origin"
     }).then(() => {
       this.setState({
         tasks: [],
