@@ -3,7 +3,6 @@ import Rails from "@rails/ujs";
 import getTaskParams from "./util";
 import DoneCheckCircle from "./DoneCheckCircle";
 import TaskForm from "./TaskForm";
-import Rails from "@rails/ujs";
 import TaskButtons from "./TaskButtons";
 import Tag from "./Tag";
 import Box from "@material-ui/core/Box";

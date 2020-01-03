@@ -1,25 +1,24 @@
 class TasksController < ApplicationController
   def new
-    @task = Task.new
   end
 
   def create
-    @task = Task.new(task_params)
-    if @task.save
-      render json: @task
-    else
-      render json: @task.errors, status: :unprocessable_entity
-    end
+    @user = User.find(user_id)
+    @task = @user.tasks.create(task_params)
+    
+    render json: @task
   end
 
   def destroy
-    @task=Task.find(params[:id])
+    @user = User.find(user_id)
+    @task=@user.tasks.find(params[:id])
     @task.update({isDeleted: true})
     head :no_content
   end
 
   def update
-    @task=Task.find(params[:id])
+    @user=User.find(user_id)
+    @task=@user.tasks.find(params[:id])
     if @task.update(task_params)
       render json: @task
     else
@@ -28,30 +27,39 @@ class TasksController < ApplicationController
   end
 
   def filter
+    @user=User.find(user_id)
     if params[:task]
       tags = params[:task][:tag_ids];
       isDone = params[:task][:isDone];
       if (tags && isDone)
-        @tasks = Task.where(isDeleted: false, isDone: false).joins(:tags).where(tags: {id:params[:task][:tag_ids]}).distinct
+        @tasks = @user.tasks.where(isDeleted: false, isDone: false).joins(:tags).where(tags: {id:params[:task][:tag_ids]}).distinct
       elsif (tags)
-        @tasks=Task.where(isDeleted: false).joins(:tags).where(tags: {id:params[:task][:tag_ids]}).distinct
+        @tasks=@user.tasks.where(isDeleted: false).joins(:tags).where(tags: {id:params[:task][:tag_ids]}).distinct
       elsif (isDone)
-        @tasks=Task.where(isDeleted: false, isDone: false)
+        @tasks=@user.tasks.where(isDeleted: false, isDone: false)
       end
     else
-      @tasks=Task.where(isDeleted: false)
+      @tasks=@user.tasks.where(isDeleted: false)
     end
     render json: @tasks
   end
 
 
   def index
-    puts session[:user_id]
-    @tasks = Task.where(isDeleted: false)
+    @user=User.find(user_id)
+    @tasks = @user.tasks.where(isDeleted: false)
   end
 
   private
     def task_params
       params.require(:task).permit(:description, :isDone, tag_ids:[])
+    end
+
+    def user_id
+      if session[:user_id]
+        session[:user_id]
+      else
+        redirect_to sessions_new_path
+      end
     end
 end

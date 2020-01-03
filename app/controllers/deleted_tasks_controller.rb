@@ -1,19 +1,31 @@
 class DeletedTasksController < ApplicationController
   def index
-    @deletedTasks=Task.where(isDeleted: true)
+    @user=User.find(user_id)
+    @deletedTasks=@user.tasks.where(isDeleted: true)
   end
 
   def destroy
+    @user=User.find(user_id)
     if(params[:id])
-      @task=Task.find(params[:id])
+      @task=@user.tasks.find(params[:id])
       @task.destroy
     else
-      Task.where(isDeleted: true).destroy_all()
+      @user.tasks.where(isDeleted: true).destroy_all()
     end
   end
 
   def recover
-    @task=Task.find(params[:id])
+    @user=User.find(user_id)
+    @task=@user.tasks.find(params[:id])
     @task.update({isDeleted:false})
   end
+
+  private
+    def user_id
+      if session[:user_id]
+        session[:user_id]
+      else
+        redirect_to sessions_new_path
+      end
+    end
 end
