@@ -45,7 +45,7 @@ class TasksController < ApplicationController
         tags = params[:task][:tag_ids];
         isDone = params[:task][:isDone];
         if (tags && isDone)
-          @tasks = @user.tasks.where(isDeleted: false, isDone: false).joins(:tags).where(tags: {id:params[:task][:tag_ids]}).distinct
+          @tasks = @user.tasks.where(isDeleted: false, isDone: isDone).joins(:tags).where(tags: {id:params[:task][:tag_ids]}).distinct
         elsif (tags)
           @tasks=@user.tasks.where(isDeleted: false).joins(:tags).where(tags: {id:params[:task][:tag_ids]}).distinct
         elsif (isDone)
