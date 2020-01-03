@@ -3,32 +3,52 @@ class TagsController < ApplicationController
   end
 
   def create
-    @user=User.find(user_id)
-    @tag = @user.tags.create(tag_params)
-
-    render json: @tag
+    @user=user
+    if @user && tag_params
+      if !@user.tags.exists?(name: params[:tag][:name])
+        @tag = @user.tags.create(tag_params)
+        render json: @tag
+      else
+        render json: @tag.errors, status: :unprocessable_entity
+      end
+    else
+      redirect_to sessions_new_path
+    end
   end
 
   def destroy
-    @user=User.find(user_id)
-    @tag=@user.tags.find(params[:id])
-    @tag.destroy
-    head :no_content
+    @user=user
+    if @user
+      @tag=@user.tags.find(params[:id])
+      @tag.destroy
+      head :no_content
+    else
+      redirect_to sessions_new_path
+    end
   end
 
   def update
-    @user=User.find(user_id)
-    @tag=@user.tags.find(params[:id])
-    if @tag.update(tag_params)
-      render json: @tag
+    @user=user
+    if @user 
+      @tag=@user.tags.find(params[:id])
+      if @tag.update(tag_params)
+        render json: @tag
+      else
+        render json: @tag.errors, status: :unprocessable_entity
+      end
     else
-      render json: @tag.errors, status: :unprocessable_entity
+      redirect_to sessions_new_path
     end
   end
 
   def index
-    @user=User.find(user_id)
-    @tags = @user.tags.all
+    @user=user
+    if @user
+      @tags = @user.tags.all
+    else
+      redirect_to sessions_new_path
+    end
+
   end
 
   private
@@ -36,11 +56,11 @@ class TagsController < ApplicationController
       params.require(:tag).permit(:name)
     end
 
-    def user_id
-      if session[:user_id]
-        session[:user_id]
+    def user
+      if session[:user_id]!=nil
+        return User.find(session[:user_id])
       else
-        redirect_to sessions_new_path
+       return nil
       end
     end
 

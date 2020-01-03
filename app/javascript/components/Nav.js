@@ -157,6 +157,10 @@ class Nav extends React.Component {
               <ListItemText primary={item.text} />
             </ListItem>
           ))}
+          <Divider component="li" />
+          <ListItem button key="logout" component="a" href="sessions/logout">
+            <ListItemText primary="Logout"></ListItemText>
+          </ListItem>
         </List>
       </div>
     );

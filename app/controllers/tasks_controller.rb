@@ -3,51 +3,72 @@ class TasksController < ApplicationController
   end
 
   def create
-    @user = User.find(user_id)
-    @task = @user.tasks.create(task_params)
-    
-    render json: @task
+    @user = user
+    if user
+      @task = @user.tasks.create(task_params)
+      
+      render json: @task
+    else
+      redirect_to sessions_new_path
+    end
   end
 
   def destroy
-    @user = User.find(user_id)
-    @task=@user.tasks.find(params[:id])
-    @task.update({isDeleted: true})
-    head :no_content
+    @user = user
+    if user
+      @task=@user.tasks.find(params[:id])
+      @task.update({isDeleted: true})
+      head :no_content
+    else
+      redirect_to sessions_new_path
+    end
   end
 
   def update
-    @user=User.find(user_id)
-    @task=@user.tasks.find(params[:id])
-    if @task.update(task_params)
-      render json: @task
+    @user=user
+    if user
+      @task=@user.tasks.find(params[:id])
+      if @task.update(task_params)
+        render json: @task
+      else
+        render json: @taks.errors, status: :unprocessable_entity
+      end
     else
-      render json: @taks.errors, status: :unprocessable_entity
+      redirect_to sessions_new_path
     end
   end
 
   def filter
-    @user=User.find(user_id)
-    if params[:task]
-      tags = params[:task][:tag_ids];
-      isDone = params[:task][:isDone];
-      if (tags && isDone)
-        @tasks = @user.tasks.where(isDeleted: false, isDone: false).joins(:tags).where(tags: {id:params[:task][:tag_ids]}).distinct
-      elsif (tags)
-        @tasks=@user.tasks.where(isDeleted: false).joins(:tags).where(tags: {id:params[:task][:tag_ids]}).distinct
-      elsif (isDone)
-        @tasks=@user.tasks.where(isDeleted: false, isDone: false)
+    @user=user
+    if user
+      if params[:task]
+        tags = params[:task][:tag_ids];
+        isDone = params[:task][:isDone];
+        if (tags && isDone)
+          @tasks = @user.tasks.where(isDeleted: false, isDone: false).joins(:tags).where(tags: {id:params[:task][:tag_ids]}).distinct
+        elsif (tags)
+          @tasks=@user.tasks.where(isDeleted: false).joins(:tags).where(tags: {id:params[:task][:tag_ids]}).distinct
+        elsif (isDone)
+          @tasks=@user.tasks.where(isDeleted: false, isDone: isDone)
+        end
+      else
+        @tasks=@user.tasks.where(isDeleted: false)
       end
+      render json: @tasks
     else
-      @tasks=@user.tasks.where(isDeleted: false)
+      redirect_to sessions_new_path
     end
-    render json: @tasks
   end
 
 
   def index
-    @user=User.find(user_id)
-    @tasks = @user.tasks.where(isDeleted: false)
+    @user=user
+    if user
+      @tasks = @user.tasks.where(isDeleted: false)
+      @tags = @user.tags.all
+    else
+      redirect_to sessions_new_path
+    end
   end
 
   private
@@ -55,11 +76,11 @@ class TasksController < ApplicationController
       params.require(:task).permit(:description, :isDone, tag_ids:[])
     end
 
-    def user_id
-      if session[:user_id]
-        session[:user_id]
+    def user
+      if session[:user_id]!=nil
+        return User.find(session[:user_id])
       else
-        redirect_to sessions_new_path
+       return nil
       end
     end
 end
