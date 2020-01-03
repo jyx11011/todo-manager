@@ -90,11 +90,10 @@ class RegisterPage extends React.Component {
         if (!response.ok) {
           return response.json();
         } else {
-          window.location = "/sessions/new";
+          window.location = "/sessions/" + this.state.name;
         }
       })
       .then(error => {
-        console.log(error);
         this.setState({
           nameText: error.name[0]
         });
@@ -116,11 +115,12 @@ class RegisterPage extends React.Component {
             </Box>
           </Toolbar>
         </AppBar>
-        <Box marginTop="20%">
+        <Toolbar />
+        <Box marginTop="50px">
           <form action="/users" method="post" onSubmit={this.handleSubmit}>
             <Grid container>
-              <Grid item xs={5}></Grid>
-              <Grid item xs={7}>
+              <Grid item sm={5} xs={2}></Grid>
+              <Grid item sm={7} xs={10}>
                 <Box display="flex">
                   <FormLabel>Handle</FormLabel>
                   <FormHelperText
@@ -144,8 +144,8 @@ class RegisterPage extends React.Component {
               </Grid>
             </Grid>
             <Grid container>
-              <Grid item xs={5}></Grid>
-              <Grid item xs={7}>
+              <Grid item sm={5} xs={2}></Grid>
+              <Grid item sm={7} xs={10}>
                 <Box display="flex">
                   <FormLabel>Password</FormLabel>
                   <FormHelperText
@@ -170,8 +170,8 @@ class RegisterPage extends React.Component {
               </Grid>
             </Grid>
             <Grid container>
-              <Grid item xs={5}></Grid>
-              <Grid item xs={7}>
+              <Grid item sm={5} xs={2}></Grid>
+              <Grid item sm={7} xs={10}>
                 <Box display="flex">
                   <FormLabel>Confirm password</FormLabel>
                   <FormHelperText
@@ -196,8 +196,8 @@ class RegisterPage extends React.Component {
               </Grid>
             </Grid>
             <Grid container style={{ marginTop: "10px" }}>
-              <Grid item xs={5}></Grid>
-              <Grid item xs={7}>
+              <Grid item sm={5}></Grid>
+              <Grid item sm={7}>
                 <Button
                   type="submit"
                   variant="contained"

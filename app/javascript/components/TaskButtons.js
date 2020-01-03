@@ -48,10 +48,18 @@ class TaskButtons extends React.Component {
             horizontal: "right"
           }}
         >
-          <IconButton onClick={this.props.handleEdit} disableRipple>
+          <IconButton
+            onClick={this.props.handleEdit}
+            disableRipple
+            color="primary"
+          >
             <EditIcon fontSize="small" />
           </IconButton>
-          <IconButton onClick={this.props.handleDelete} disableRipple>
+          <IconButton
+            onClick={this.props.handleDelete}
+            disableRipple
+            color="primary"
+          >
             <DeleteIcon fontSize="small" />
           </IconButton>
         </Popover>

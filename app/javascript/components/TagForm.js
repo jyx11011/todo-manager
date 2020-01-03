@@ -2,6 +2,7 @@ import React from "react";
 import Rails from "@rails/ujs";
 import Grid from "@material-ui/core/Grid";
 import { TextField, Button } from "@material-ui/core";
+import { indigo } from "@material-ui/core/colors";
 class TagForm extends React.Component {
   constructor(props) {
     super(props);
@@ -104,7 +105,12 @@ class TagForm extends React.Component {
           error={this.state.error}
           helperText={this.state.helperText}
         ></TextField>
-        <Button type="submit" variant="contained" size="small">
+        <Button
+          type="submit"
+          variant="contained"
+          size="small"
+          style={{ backgroundColor: indigo[100] }}
+        >
           {this.props.text ? this.props.text : "create"}
         </Button>
       </form>

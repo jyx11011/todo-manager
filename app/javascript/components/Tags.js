@@ -84,6 +84,7 @@ class Tags extends React.Component {
         onClick={this.handleNewTagButtonClick}
         size="small"
         variant="contained"
+        color="primary"
       >
         Create new tag
       </Button>

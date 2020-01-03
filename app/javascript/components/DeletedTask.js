@@ -62,6 +62,7 @@ class DeletedTask extends React.Component {
             disableRipple
             onClick={this.handleToggleOpen}
             size="small"
+            color="secondary"
           >
             <DeleteIcon fontSize="small" />
           </IconButton>
@@ -69,7 +70,7 @@ class DeletedTask extends React.Component {
             open={this.state.confirmationOpen}
             handleDelete={this.handleDelete}
             handleCancel={this.handleToggleOpen}
-            title="Are you sure you want to delete this task?"
+            title="Are you sure you want to delete this task permantly?"
           />
         </Box>
         <Box marginTop="5px" marginRight="2px">

@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   get 'sessions/new'
   post 'sessions', to: 'sessions#create'
   get 'sessions/logout'
+  get 'sessions/:name', to: 'sessions#new'
   
   get 'trash', to: 'deleted_tasks#index'
   post 'deleted_tasks/destroy/:id', to: 'deleted_tasks#destroy'

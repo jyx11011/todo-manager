@@ -1,20 +1,21 @@
-import React from "react"
-import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
+import React from "react";
+import Button from "@material-ui/core/Button";
+import AddIcon from "@material-ui/icons/Add";
 
 class NewTagButton extends React.Component {
-  render () {
+  render() {
     return (
       <Button
         variant="contained"
-        color="secondary"
+        color="primary"
         startIcon={<AddIcon />}
         size="small"
         onClick={this.props.onClick}
-      >Create new tag
+      >
+        Create new tag
       </Button>
     );
   }
 }
 
-export default NewTagButton
+export default NewTagButton;

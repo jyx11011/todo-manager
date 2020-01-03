@@ -106,16 +106,20 @@ class FilterSidePane extends React.Component {
           {this.getAddIcon()}
         </Box>
         <Box display="flex" flexWrap="wrap">
-          {this.props.tagsChosen.map(tag => {
-            return (
-              <Tag
-                key={tag.id}
-                tag={tag}
-                deletable={1}
-                handleDelete={this.handleTagDeleteClick}
-              />
-            );
-          })}
+          {this.props.tagsChosen.length ? (
+            this.props.tagsChosen.map(tag => {
+              return (
+                <Tag
+                  key={tag.id}
+                  tag={tag}
+                  deletable={1}
+                  handleDelete={this.handleTagDeleteClick}
+                />
+              );
+            })
+          ) : (
+            <em>No tag is chosen</em>
+          )}
         </Box>
         <Collapse in={this.state.tagsOpened}>
           <Box>
@@ -185,16 +189,29 @@ class FilterSidePane extends React.Component {
         style={{ width: filterWidth, flexShrink: 0, zIndex: 0 }}
       >
         <Toolbar />
-        <Typography style={{ fontSize: "1.5em" }}>Filter</Typography>
-        <Box>{this.renderTagsArea()}</Box>
+        <Typography style={{ fontSize: "1.4em", paddingBottom: "5px" }}>
+          Filter
+        </Typography>
+        <Divider />
+        <Box paddingBottom="10px">{this.renderTagsArea()}</Box>
         <Divider />
         <Box>{this.renderIsDoneArea()}</Box>
         <Divider />
-        <Box>
-          <Button onClick={this.handleSearch} variant="outlined">
+        <Box display="flex" padding="5px" justifyContent="space-around">
+          <Button
+            onClick={this.handleSearch}
+            variant="contained"
+            size="small"
+            color="primary"
+          >
             Apply
           </Button>
-          <Button onClick={this.handleReset} variant="outlined">
+          <Button
+            onClick={this.handleReset}
+            variant="contained"
+            size="small"
+            color="secondary"
+          >
             Reset
           </Button>
         </Box>

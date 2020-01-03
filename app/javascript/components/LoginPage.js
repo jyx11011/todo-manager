@@ -12,12 +12,28 @@ class LoginPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: "",
+      name: props.name ? props.name : "",
       password: "",
       helperText: ""
     };
+    this.getMessage = this.getMessage.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+  }
+
+  getMessage() {
+    if (this.props.name) {
+      return "Congratulation! You have successfully registered! Please login to access your todo manager.";
+    } else {
+      return (
+        <React.Fragment>
+          Please login to access your todo manager.
+          <em style={{ fontSize: "0.8em" }}>
+            Do not have an account yet? <a href="/users/new">Register</a> now!
+          </em>
+        </React.Fragment>
+      );
+    }
   }
 
   handleChange(e) {
@@ -64,11 +80,15 @@ class LoginPage extends React.Component {
             </Box>
           </Toolbar>
         </AppBar>
-        <Box marginTop="20%">
+        <Toolbar />
+        <Box padding="20px">
+          <Typography>{this.getMessage()}</Typography>
+        </Box>
+        <Box marginTop="50px">
           <form onSubmit={this.handleSubmit}>
             <Grid container>
-              <Grid item xs={5}></Grid>
-              <Grid item xs={7}>
+              <Grid item md={5} xs={2}></Grid>
+              <Grid item md={7} xs={10}>
                 <Box display="flex">
                   <FormLabel>Handle</FormLabel>
                 </Box>
@@ -85,8 +105,8 @@ class LoginPage extends React.Component {
               </Grid>
             </Grid>
             <Grid container>
-              <Grid item xs={5}></Grid>
-              <Grid item xs={7}>
+              <Grid item md={5} xs={2}></Grid>
+              <Grid item md={7} xs={10}>
                 <Box display="flex">
                   <FormLabel>Password</FormLabel>
                 </Box>
@@ -104,16 +124,16 @@ class LoginPage extends React.Component {
               </Grid>
             </Grid>
             <Grid container>
-              <Grid item xs={5} />
-              <Grid item xs={7}>
+              <Grid item md={5} xs={2}></Grid>
+              <Grid item md={7} xs={10}>
                 <FormHelperText error margin="dense">
                   {this.state.helperText}
                 </FormHelperText>
               </Grid>
             </Grid>
             <Grid container style={{ margin: "2px" }}>
-              <Grid item xs={5}></Grid>
-              <Grid item xs={7}>
+              <Grid item md={5} xs={2}></Grid>
+              <Grid item md={7} xs={10}>
                 <Button
                   type="submit"
                   variant="contained"

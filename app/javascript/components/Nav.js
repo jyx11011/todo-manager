@@ -14,10 +14,19 @@ import ListItemText from "@material-ui/core/ListItemText";
 import MenuIcon from "@material-ui/icons/Menu";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import Box from "@material-ui/core/Box";
 import { withStyles } from "@material-ui/core/styles";
 import TagForm from "./TagForm";
-import { Tooltip } from "@material-ui/core";
+import { Tooltip, ListItemIcon } from "@material-ui/core";
+import ListIcon from "@material-ui/icons/List";
+import DeleteIcon from "@material-ui/icons/Delete";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogActions from "@material-ui/core/DialogActions";
+import { indigo } from "@material-ui/core/colors";
 
 const drawerWidth = 200;
 
@@ -50,14 +59,17 @@ const StyledMenuButton = withStyles({
 const drawerList = [
   {
     text: "Todo list",
+    icon: <ListIcon />,
     href: "/tasks"
   },
   {
     text: "Tags",
+    icon: <LabelIcon />,
     href: "/tags"
   },
   {
     text: "Trash",
+    icon: <DeleteIcon />,
     href: "/trash"
   }
 ];
@@ -67,7 +79,8 @@ class Nav extends React.Component {
     super(props);
     this.state = {
       isOpen: false,
-      isEditTag: false
+      isEditTag: false,
+      isExist: false
     };
     this.handleDrawerToggle = this.handleDrawerToggle.bind(this);
     this.getDrawer = this.getDrawer.bind(this);
@@ -77,6 +90,7 @@ class Nav extends React.Component {
     this.handleCloseTagForm = this.handleCloseTagForm.bind(this);
     this.handleNewTag = this.handleNewTag.bind(this);
     this.getNewTaskButton = this.getNewTaskButton.bind(this);
+    this.handleCancel = this.handleCancel.bind(this);
   }
 
   handleAddTaskButtonClick() {
@@ -117,7 +131,11 @@ class Nav extends React.Component {
             <LabelIcon fontSize="small" />
           </IconButton>
           <TagForm onSubmit={this.handleNewTag} clear={true} />
-          <IconButton size="small" onClick={this.handleCloseTagForm}>
+          <IconButton
+            size="small"
+            onClick={this.handleCloseTagForm}
+            style={{ color: indigo[100] }}
+          >
             <HighlightOffIcon fontSize="small" />
           </IconButton>
         </React.Fragment>
@@ -125,7 +143,11 @@ class Nav extends React.Component {
     } else {
       return (
         <Tooltip title="Create new tag" style={{ marginLeft: "4px" }}>
-          <IconButton onClick={this.handleAddTagButtonClick} disableRipple>
+          <IconButton
+            onClick={this.handleAddTagButtonClick}
+            disableRipple
+            style={{ color: indigo[100], marginLeft: "4px" }}
+          >
             <LabelIcon fontSize="small" />
           </IconButton>
         </Tooltip>
@@ -139,26 +161,58 @@ class Nav extends React.Component {
       <Tooltip title="Create new task">
         <IconButton
           onClick={this.handleAddTaskButtonClick}
-          style={{ marginLeft: "4px" }}
+          style={{ color: indigo[100], marginLeft: "4px" }}
+          disableRipple
         >
           <AddIcon fontSize="small" />
         </IconButton>
       </Tooltip>
     );
   }
+
+  handleCancel() {
+    this.setState({
+      isExist: false
+    });
+  }
+
   getDrawer() {
     return (
       <div>
-        <Toolbar />
+        <Toolbar>
+          <AccountCircleIcon />
+          <Typography style={{ marginLeft: "5px", fontSize: "1.5rem" }}>
+            {this.props.user}
+          </Typography>
+        </Toolbar>
+
         <Divider />
         <List>
           {drawerList.map(item => (
             <ListItem button key={item.text} component="a" href={item.href}>
+              <ListItemIcon
+                style={{
+                  color: new RegExp(item.href).test(window.location.href)
+                    ? indigo[900]
+                    : indigo[300]
+                }}
+              >
+                {item.icon}
+              </ListItemIcon>
               <ListItemText primary={item.text} />
             </ListItem>
           ))}
-          <Divider component="li" />
-          <ListItem button key="logout" component="a" href="sessions/logout">
+          <Divider />
+          <ListItem
+            button
+            key="logout"
+            onClick={() => {
+              this.setState({ isExist: true });
+            }}
+          >
+            <ListItemIcon>
+              <ExitToAppIcon />
+            </ListItemIcon>
             <ListItemText primary="Logout"></ListItemText>
           </ListItem>
         </List>
@@ -179,7 +233,7 @@ class Nav extends React.Component {
             </Typography>
             {this.getNewTaskButton()}
             {this.getTagArea()}
-            {this.props.buttons}
+            <Box marginLeft="5px">{this.props.buttons}</Box>
           </Toolbar>
         </StyledAppBar>
         <StyledBox component="nav">
@@ -206,6 +260,17 @@ class Nav extends React.Component {
               {this.getDrawer()}
             </Drawer>
           </Hidden>
+          <Dialog open={this.state.isExist}>
+            <DialogTitle>Are you sure you want to logout?</DialogTitle>
+            <DialogActions>
+              <Button color="secondary" href="/sessions/logout">
+                Yes
+              </Button>
+              <Button onClick={this.handleCancel} color="primary">
+                Cancel
+              </Button>
+            </DialogActions>
+          </Dialog>
         </StyledBox>
       </React.Fragment>
     );

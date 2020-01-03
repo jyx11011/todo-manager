@@ -1,9 +1,11 @@
 import React from "react";
 import Tasks from "./Tasks";
 import Nav from "./Nav";
-import { Toolbar, IconButton } from "@material-ui/core";
+import { Toolbar, IconButton, Tooltip } from "@material-ui/core";
 import FilterSidePane from "./FilterSidePane";
 import FilterListIcon from "@material-ui/icons/FilterList";
+import Box from "@material-ui/core/Box";
+import { indigo } from "@material-ui/core/colors";
 
 const filterWidth = 240;
 const mainStyle = {
@@ -143,9 +145,15 @@ class MainPage extends React.Component {
 
   getFilterButton() {
     return (
-      <IconButton disableRipple onClick={this.handleFilterToggle}>
-        <FilterListIcon />
-      </IconButton>
+      <Tooltip title="Toggle task filter">
+        <IconButton
+          disableRipple
+          onClick={this.handleFilterToggle}
+          style={{ color: indigo[100], marginLeft: "4px" }}
+        >
+          <FilterListIcon />
+        </IconButton>
+      </Tooltip>
     );
   }
   render() {
@@ -153,6 +161,7 @@ class MainPage extends React.Component {
       <div style={{ display: "flex" }}>
         <Nav
           title="Todo list"
+          user={this.props.user}
           taskButton={true}
           createTag={true}
           buttons={this.getFilterButton()}
@@ -161,13 +170,15 @@ class MainPage extends React.Component {
         />
         <main style={this.state.filterOpen ? mainShiftStyle : mainStyle}>
           <Toolbar />
-          <Tasks
-            tasks={this.state.tasksShown}
-            allTags={this.state.allTags}
-            handleDeleteTask={this.handleDeleteTask}
-            handleNewTask={this.handleNewTask}
-            handleEditTask={this.handleEditTask}
-          ></Tasks>
+          <Box padding="20px">
+            <Tasks
+              tasks={this.state.tasksShown}
+              allTags={this.state.allTags}
+              handleDeleteTask={this.handleDeleteTask}
+              handleNewTask={this.handleNewTask}
+              handleEditTask={this.handleEditTask}
+            ></Tasks>
+          </Box>
         </main>
         <FilterSidePane
           open={this.state.filterOpen}

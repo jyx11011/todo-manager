@@ -7,14 +7,14 @@ class NewTaskButton extends React.Component {
     return (
       <Button
         variant="contained"
-        color="secondary"
+        color="primary"
         startIcon={<AddIcon />}
         size="small"
         onClick={this.props.onClick}
         style={{ marginLeft: 10, marginTop: 5 }}
         id="new-task-button"
       >
-        Add new task
+        Create new task
       </Button>
     );
   }

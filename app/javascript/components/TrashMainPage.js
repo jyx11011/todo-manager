@@ -6,6 +6,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import DeleteConfirmation from "./DeleteConfirmation";
+import { indigo } from "@material-ui/core/colors";
 class TrashMainPage extends React.Component {
   constructor(props) {
     super(props);
@@ -90,6 +91,9 @@ class TrashMainPage extends React.Component {
         <Button
           onClick={this.handleToggleOpen}
           disabled={this.state.tasks.length == 0}
+          size="small"
+          color="primary"
+          variant="contained"
         >
           Empty trash
         </Button>
@@ -97,7 +101,7 @@ class TrashMainPage extends React.Component {
           open={this.state.confirmationOpen}
           handleDelete={this.handleEmptyTrash}
           handleCancel={this.handleToggleOpen}
-          title="Are you sure you want to delete all tasks in trash?"
+          title="Are you sure you want to delete all tasks in trash permantly?"
         />
       </React.Fragment>
     );
@@ -106,10 +110,13 @@ class TrashMainPage extends React.Component {
   render() {
     return (
       <div style={{ display: "flex" }}>
-        <Nav title="Trash" buttons={this.getEmptyTrashButton()} />
+        <Nav title="Trash" user={this.props.user} />
         <main style={{ flexGrow: 1, padding: "0px 20px 10px 10px" }}>
           <Toolbar />
-          <Box padding="20px">{this.renderTasks()}</Box>
+          <Box padding="20px">
+            {this.getEmptyTrashButton()}
+            {this.renderTasks()}
+          </Box>
         </main>
       </div>
     );

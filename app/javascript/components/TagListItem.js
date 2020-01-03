@@ -85,6 +85,7 @@ class TagListItem extends React.Component {
             size="small"
             style={{ padding: "5px 0" }}
             onClick={this.handleDelete}
+            color="secondary"
           >
             <Typography style={{ fontSize: "0.6rem" }}>Delete</Typography>
           </Button>

@@ -4,7 +4,6 @@ import Tags from "./Tags";
 import Toolbar from "@material-ui/core/Toolbar";
 import Box from "@material-ui/core/Box";
 
-import PropTypes from "prop-types";
 class TagMainPage extends React.Component {
   constructor(props) {
     super(props);
@@ -47,10 +46,15 @@ class TagMainPage extends React.Component {
   render() {
     return (
       <div style={{ display: "flex" }}>
-        <Nav title="Tags" createTag={true} handleNewTag={this.handleNewTag} />
+        <Nav
+          title="Tags"
+          user={this.props.user}
+          createTag={true}
+          handleNewTag={this.handleNewTag}
+        />
         <main style={{ flexGrow: 1, padding: "0px 20px 10px 10px" }}>
           <Toolbar />
-          <Box style={{ maxWidth: "600px" }}>
+          <Box style={{ padding: "20px" }}>
             <Tags
               tags={this.state.tags}
               handleDelete={this.handleDelete}
