@@ -176,6 +176,43 @@ class Nav extends React.Component {
     });
   }
 
+  getMenuItem() {
+    return drawerList.map(item =>
+      new RegExp(item.href).test(window.location.href) ? (
+        <ListItem
+          button
+          disableRipple
+          key={item.text}
+          component="a"
+          href={item.href}
+          style={{
+            backgroundColor: indigo[50]
+          }}
+        >
+          <ListItemIcon
+            style={{
+              color: indigo[900]
+            }}
+          >
+            {item.icon}
+          </ListItemIcon>
+          <ListItemText primary={item.text} />
+        </ListItem>
+      ) : (
+        <ListItem button key={item.text} component="a" href={item.href}>
+          <ListItemIcon
+            style={{
+              color: indigo[300]
+            }}
+          >
+            {item.icon}
+          </ListItemIcon>
+          <ListItemText primary={item.text} />
+        </ListItem>
+      )
+    );
+  }
+
   getDrawer() {
     return (
       <div>
@@ -188,20 +225,7 @@ class Nav extends React.Component {
 
         <Divider />
         <List>
-          {drawerList.map(item => (
-            <ListItem button key={item.text} component="a" href={item.href}>
-              <ListItemIcon
-                style={{
-                  color: new RegExp(item.href).test(window.location.href)
-                    ? indigo[900]
-                    : indigo[300]
-                }}
-              >
-                {item.icon}
-              </ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItem>
-          ))}
+          {this.getMenuItem()}
           <Divider />
           <ListItem
             button

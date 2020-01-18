@@ -3,18 +3,19 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import { Input, Typography, Paper } from "@material-ui/core";
-import Box from "@material-ui/core/Box"
+import Box from "@material-ui/core/Box";
 import Tag from "./Tag";
 class AddTagForm extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      tags: props.allTags.filter(tag => props.tags.some(t => t.id == tag.id)),
+      tags: props.allTags.filter(tag => props.tags.some(t => t.id == tag.id))
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.renderTagMenu = this.renderTagMenu.bind(this);
   }
 
   handleChange(e) {
@@ -37,6 +38,25 @@ class AddTagForm extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
   }
+
+  renderTagMenu() {
+    if (this.props.allTags.length) {
+      return this.props.allTags.map(tag => {
+        return (
+          <MenuItem value={tag} key={tag.id}>
+            {tag.name}
+          </MenuItem>
+        );
+      });
+    } else {
+      return (
+        <MenuItem disabled>
+          <em>No tag yet...</em>
+        </MenuItem>
+      );
+    }
+  }
+
   render() {
     return (
       <Box>
@@ -46,14 +66,18 @@ class AddTagForm extends React.Component {
             displayEmpty
             value={this.state.tags}
             onChange={this.handleChange}
-            input={<Input/>}
-            MenuProps={{PaperProps:{style:{maxHeight: 240}}}}
+            input={<Input />}
+            MenuProps={{ PaperProps: { style: { maxHeight: 240 } } }}
             renderValue={selected => {
               if (selected.length == 0) {
-                return <Typography style={{fontSize: '0.8em'}}>Click to select tags</Typography>;
+                return (
+                  <Typography style={{ fontSize: "0.8em" }}>
+                    Click to select tags
+                  </Typography>
+                );
               } else {
                 return (
-                  <div style={{display:'flex',flexWrap:"wrap"}}>
+                  <div style={{ display: "flex", flexWrap: "wrap" }}>
                     {selected.map(value => (
                       <Tag key={value.id} tag={value} deletable={0} />
                     ))}
@@ -62,13 +86,7 @@ class AddTagForm extends React.Component {
               }
             }}
           >
-            {this.props.allTags.map((tag) => {
-              return (
-                <MenuItem value={tag} key={tag.id}>
-                  {tag.name}
-                </MenuItem>
-              );
-            })}
+            {this.renderTagMenu()}
           </Select>
         </FormControl>
       </Box>
